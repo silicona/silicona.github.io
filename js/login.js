@@ -46,6 +46,7 @@ Login.check_login = (e) => {
         Login.set_resp("Only humans admit");
         return false;
     }
+    console.log(Cookies);
     let current = Cookies.get_scores_cookie()[user];
     if (current) {
         Cookies.update_current_cookie(current);

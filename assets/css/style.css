@@ -1,0 +1,218 @@
+* {
+  box-sizing: border-box;
+}
+
+#screen {
+  width: 300px;
+  height: 500px;
+  margin: 0 auto;
+  border-radius: 7px;
+  border: 2px solid blue;
+}
+#screen .title_part h2 {
+  margin: 0;
+  padding: 1em;
+}
+#screen .footer_part {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0.3ex;
+}
+
+#login #login_title {
+  text-align: center;
+}
+#login #login_form form {
+  width: 250px;
+  margin: 0 auto;
+}
+#login #login_form form .form_part {
+  padding: 1ex;
+}
+#login #login_form form .form_part input[type=text] {
+  width: 100%;
+}
+#login #login_form form #div_pass {
+  display: none;
+}
+#login #login_form form #div_resp {
+  height: 1.5em;
+}
+
+#nav {
+  height: 50px;
+  max-height: 50px;
+}
+#nav::before, #nav::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+#nav .nav_part {
+  padding: 0.3ex;
+  float: left;
+}
+#nav #nav_title p {
+  margin: 1ex;
+}
+#nav #nav_logout {
+  float: right;
+}
+#nav #nav_logout #logout_btn {
+  padding: 0.4ex;
+}
+#nav #nav_logout #logout_btn img {
+  width: 30px;
+  float: left;
+}
+
+#board {
+  position: relative;
+  height: calc(500px - 50px - 4px);
+}
+#board #board_form form {
+  padding: 1ex 1em;
+  text-align: center;
+}
+#board #board_play {
+  height: 200px;
+}
+#board #board_play::before, #board #board_play::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+#board #board_play .play_part {
+  height: inherit;
+  width: 50%;
+  float: left;
+}
+#board #board_play .play_part .play_part_int .play_label {
+  margin: 0;
+  text-align: center;
+}
+#board #board_play .play_part .btn_choice {
+  margin: 1.3em auto;
+  display: block;
+  transition: transform 0.7s ease;
+}
+#board #board_play .play_part .btn_choice.marked {
+  border-radius: 10px;
+  transform: scale(1.5);
+}
+#board #board_play .play_part .btn_choice img {
+  width: 35px;
+  float: left;
+}
+#board #board_play .play_part .bender_choice {
+  height: inherit;
+  display: none;
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+#board #board_play .play_part .bender_choice.show {
+  display: flex;
+  opacity: 1;
+}
+#board #board_play .play_part .bender_choice img {
+  margin: auto;
+  width: 80%;
+  padding: 2ex 0;
+  border: 1px solid black;
+}
+#board #board_back {
+  padding: 1em;
+}
+#board #board_back h4 {
+  margin: 0 0 1ex;
+  text-align: center;
+}
+#board #board_score {
+  text-align: center;
+  padding: 1ex 0;
+}
+#board #board_score h4 {
+  margin: 0;
+  display: inline-block;
+}
+#board #board_roboitems ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#board #board_roboitems ul .roboitem {
+  padding: 1ex 1em;
+}
+#board #board_roboitems ul .roboitem img {
+  width: 25px;
+}
+#board #board_roboitems ul .roboitem span {
+  display: inline-block;
+  padding: 0 0.4ex;
+  width: calc(100% - 50px);
+  text-align: center;
+}
+#board #board_roboitems #div_btn_roboitems {
+  padding: 0 1em;
+  text-align: right;
+}
+#board #board_resp {
+  text-align: center;
+  padding: 0.5ex;
+}
+#board #board_resp h3 {
+  margin: 0;
+}
+
+#scores {
+  position: relative;
+  height: calc(500px - 50px - 4px);
+  padding-bottom: 2em;
+}
+#scores #scores_list {
+  overflow: auto;
+  max-height: 330px;
+  border: 1px solid transparent;
+}
+#scores #scores_list .scores_list_name {
+  padding: 1ex;
+  margin: 1ex;
+  border-bottom: 1px solid blue;
+  background-color: #efefef;
+}
+#scores #scores_footer::before, #scores #scores_footer::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+#scores #scores_footer button {
+  float: left;
+}
+#scores #scores_footer #scores_btn_clean {
+  float: right;
+}
+#scores #scores_footer .cleaner {
+  position: absolute;
+  top: -100%;
+  right: 1em;
+  padding: 0.3ex 0.7ex;
+  border: 2px solid red;
+  background-color: #f9a290;
+  border-radius: 7px;
+  line-height: 1.3em;
+  font-size: 1.3em;
+  border: 2px solid;
+}
+#scores #scores_footer .cleaner#clean-ok {
+  border-color: green;
+  background-color: #b6ffad;
+}
+#scores #scores_footer .cleaner#clean-warning {
+  border-color: red;
+  background-color: #f9a290;
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -44,12 +44,11 @@ Cookies.get_current_basic = (name) => {
     for (const choice of Cookies.choices) {
         roboitems[choice] = false;
     }
-    // for (const choice of Game.choices){ stats[choice] = 0; }
     return {
         name: name,
         score: 0,
-        stats: stats,
         roboscore: 0,
+        stats: stats,
         roboitems: roboitems
     };
 };
@@ -57,7 +56,12 @@ Cookies.get_current_cookie = () => {
     return Cookies.get_cookies()[Cookies.current_cookie];
 };
 Cookies.get_scores_cookie = () => {
-    return Cookies.get_cookies()[Cookies.scores_cookie];
+    let scores = Cookies.get_cookies()[Cookies.scores_cookie];
+    if (!scores) {
+        scores = Cookies.set_scores_basic();
+    }
+    return scores;
+    // return Cookies.get_cookies()[Cookies.scores_cookie];
 };
 Cookies.is_robo_player = () => {
     let autorized = true;
@@ -79,16 +83,29 @@ Cookies.set_current_cookie = (name) => {
 Cookies.set_scores_cookie = (scores) => {
     return Cookies.set_cookie(Cookies.scores_cookie, scores);
 };
-Cookies.set_scores_test = () => {
-    return {
+Cookies.set_scores_basic = () => {
+    let scores = {
         admin: {
             name: "admin",
-            score: 0,
+            score: 20, roboscore: 11,
             stats: { paper: 5, stone: 0, scissors: 2 },
-            roboscore: 0,
             roboitems: { paper: true, stone: true, scissors: true }
+        },
+        sofia: {
+            name: "sofia",
+            score: 26, roboscore: 19,
+            stats: { paper: 25, stone: 19, scissors: 32 },
+            roboitems: { paper: true, stone: true, scissors: true }
+        },
+        jose: {
+            name: "jose",
+            score: 1, roboscore: 2,
+            stats: { paper: 3, stone: 1, scissors: 2 },
+            roboitems: { paper: true, stone: false, scissors: false }
         }
     };
+    Cookies.set_scores_cookie(scores);
+    return scores;
 };
 Cookies.update_current_cookie = (current) => {
     Cookies.set_cookie(Cookies.current_cookie, current);

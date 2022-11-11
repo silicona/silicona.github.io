@@ -1,23 +1,24 @@
 export const BoardHtml = `
 <section id="board">
-  <article id="board_title" class="board_part title_part">
-    <h2>Playing, human!</h2>
-  </article>
   <article id="board_form" class="board_part">
     <form>
-      <select id="sel_league">
-        <option value="human">Human League</option>
-        <option value="robot">Robot League</option>
-      </select>
-      <select id="sel_dif">
-        <option value="0">Basic</option>
-        <option value="1">Evolutive</option>
-        <option value="2">Maverick</option>
-      </select>
+      <div class="board_sel">
+        <select id="sel_league">
+          <option value="human">Human League</option>
+          <option value="robot">Robot League</option>
+        </select>
+      </div>
+      <div class="board_sel">
+        <select id="sel_dif">
+          <option value="0">Basic</option>
+          <option value="1">Evolutive</option>
+          <option value="2">Maverick</option>
+        </select>
+      </div>
     </form>
   </article>
-  <article id="board_play" class="board_part">
-  </article>
+  <article id="board_title" class="board_part title_part"></article>
+  <article id="board_play" class="board_part"></article>
   <article id="board_score" class="board_part">
     <h4 id="score_title">Score: <span id="score"></span></h4><span id="roboscore_title"></span>
   </article>
@@ -29,18 +30,36 @@ export const BoardHtml = `
   </article>
 </section>
 `;
+export const BoardPlayOld = `
+<div id="div_player" class="play_part">
+  <h4 class="play_label">Your choice</h4>
+  <div class="play_part_int">
+    <button id="btn_stone" class="btn_board btn_choice" choice="stone"><img src="assets/img/stone.png"></button>
+    <button id="btn_paper" class="btn_board btn_choice" choice="paper"><img src="assets/img/paper.png"></button>
+    <button id="btn_scissors" class="btn_board btn_choice" choice="scissors"><img src="assets/img/scissors.png"></button>
+  </div>
+</div>
+<div id="div_machine" class="play_part">
+  <h4 class="play_label">My choice</h4>
+  <div class="play_part_int">
+    <div id="fondo_stone" class="bender_choice"><img src="assets/img/stone.png"></div>
+    <div id="fondo_paper" class="bender_choice"><img src="assets/img/paper.png"></div>
+    <div id="fondo_scissors" class="bender_choice"><img src="assets/img/scissors.png"></div>
+  </div>
+</div>
+`;
 export const BoardPlay = `
 <div id="div_player" class="play_part">
+  <h4 class="play_label">Your choice</h4>
   <div class="play_part_int">
-    <h4 class="play_label">Your choice</h4>
     <button id="btn_stone" class="btn_choice" choice="stone"><img src="assets/img/stone.png"></button>
     <button id="btn_paper" class="btn_choice" choice="paper"><img src="assets/img/paper.png"></button>
     <button id="btn_scissors" class="btn_choice" choice="scissors"><img src="assets/img/scissors.png"></button>
   </div>
 </div>
 <div id="div_machine" class="play_part">
+  <h4 class="play_label">My choice</h4>
   <div class="play_part_int">
-    <h4 class="play_label">My choice</h4>
     <div id="fondo_stone" class="bender_choice"><img src="assets/img/stone.png"></div>
     <div id="fondo_paper" class="bender_choice"><img src="assets/img/paper.png"></div>
     <div id="fondo_scissors" class="bender_choice"><img src="assets/img/scissors.png"></div>
@@ -49,16 +68,16 @@ export const BoardPlay = `
 `;
 export const BoardRoboPlay = `
 <div id="div_player" class="play_part">
+  <h4 class="play_label">Your choice</h4>
   <div class="play_part_int">
-    <h4 class="play_label">Your choice</h4>
     <button id="btn_stone" class="btn_choice" choice="stone"><img src="assets/img/blob.jpg"></button>
     <button id="btn_paper" class="btn_choice" choice="paper"><img src="assets/img/field.png"></button>
     <button id="btn_scissors" class="btn_choice" choice="scissors"><img src="assets/img/laser.jpg"></button>
   </div>
 </div>
 <div id="div_machine" class="play_part">
+  <h4 class="play_label">Your choice</h4>
   <div class="play_part_int">
-    <h4 class="play_label">Your choice</h4>
     <div id="fondo_stone" class="bender_choice"><img src="assets/img/blob.jpg"></div>
     <div id="fondo_paper" class="bender_choice"><img src="assets/img/field.png"></div>
     <div id="fondo_scissors" class="bender_choice"><img src="assets/img/laser.jpg"></div>

@@ -6,7 +6,7 @@ export const LoginHtml = `
   <article id="login_form" class="login_part">
     <form>
       <div id="div_name" class="form_part">
-        <label>Nombre:</label>
+        <label>Name:</label>
         <input type="text" id="login_name"/>
       </div>
       <div id="div_pass" class="form_part">

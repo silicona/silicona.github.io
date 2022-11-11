@@ -1,7 +1,7 @@
 export const ScoresHtml = `
 <section id="scores">
   <article id="scores_title" class="scores_part title_part">
-    <h2>Scores, human!</h2>
+    <h3>RoboScores, human!</h3>
   </article>
   <article id="scores_list" class="scores_part"></article>
   <article id="scores_footer" class="scores_part footer_part">

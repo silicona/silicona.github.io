@@ -57,6 +57,20 @@ Board.buy_roboitems = (e) => {
     Board.set_board_roboplay();
     Board.set_view_links();
 };
+Board.change_title = (e = null) => {
+    let msg;
+    switch ($("#sel_dif").val()) {
+        case "1":
+            msg = "I know you?<br>You gonna lose!";
+            break;
+        case "2":
+            msg = "You´ll get an extra point,<br>if you win...";
+            break;
+        default:
+            msg = "Are you ready?<br>Let´s play";
+    }
+    Board.set_title(msg);
+};
 Board.check_win = (player, machine) => {
     if (player == machine) {
         return 0;
@@ -76,7 +90,6 @@ Board.get_play_choice = (e) => __awaiter(void 0, void 0, void 0, function* () {
     let $boton = $(e.currentTarget);
     $boton.addClass("marked");
     let player = String($boton.attr("choice"));
-    // let league = $("#sel_league").val() || "human"
     let dif = +($("#sel_dif").val() || 0);
     let choice = "";
     switch (dif) {
@@ -113,13 +126,10 @@ Board.get_play_choice = (e) => __awaiter(void 0, void 0, void 0, function* () {
         default:
             Board.set_resp("Draw");
     }
-    // await Board.sleep();
-    setTimeout(() => {
-        Board.hide_last_choice($boton);
-    }, 1500);
-    setTimeout(() => {
-        Board.set_resp("");
-    }, 2000);
+    yield Board.sleep(1500);
+    Board.hide_last_choice($boton);
+    yield Board.sleep();
+    Board.set_resp("");
 });
 Board.get_winner_choice = (player) => {
     switch (player) {
@@ -206,12 +216,16 @@ Board.set_robo_score = (on = true) => {
 Board.set_score = (score) => {
     $("#score").html(score);
 };
+Board.set_title = (msg) => {
+    $("#board_title").html("<h3>" + msg + "</h3>");
+};
 Board.set_view = () => {
     Nav.set_view();
     $("#div_content").html(BoardHtml);
     const current = Cookies.get_current_cookie();
     Board.set_board_play(BoardPlay);
     Board.set_score(current.score);
+    Board.change_title();
     Board.set_view_links();
     Cookies.update_scores_cookie(current);
 };
@@ -219,4 +233,5 @@ Board.set_view_links = () => {
     $("#board_btn_scores").on("click", Scores.set_view);
     $(".play_part .btn_choice").on("click", Board.get_play_choice);
     $("#sel_league").on("change", Board.init_robo_league);
+    $("#sel_dif").on("change", Board.change_title);
 };

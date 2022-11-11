@@ -2,12 +2,17 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: #8edd9c;
+}
+
 #screen {
   width: 300px;
   height: 500px;
   margin: 0 auto;
   border-radius: 7px;
-  border: 2px solid blue;
+  border: 2px solid black;
+  background-image: linear-gradient(#007591, #FFF);
 }
 #screen .title_part h2 {
   margin: 0;
@@ -19,9 +24,51 @@
   width: 100%;
   padding: 0.3ex;
 }
+#screen .footer_part button {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  direction: ltr;
+  display: block;
+  font-family: "SF Pro Text", "SF Pro Icons", "AOS Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 1.47059;
+  min-width: 30px;
+  overflow: visible;
+  padding: 4px 15px;
+  text-align: center;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+#screen .footer_part button::disabled {
+  cursor: default;
+  opacity: 0.3;
+}
+#screen .footer_part button::hover {
+  background-image: linear-gradient(#51A9EE, #147BCD);
+  border-color: #1482D0;
+  text-decoration: none;
+}
+#screen .footer_part button::active {
+  background-image: linear-gradient(#3D94D9, #0067B9);
+  border-color: #006DBC;
+  outline: none;
+}
+#screen .footer_part button::focus {
+  box-shadow: rgba(131, 192, 253, 0.5) 0 0 0 3px;
+  outline: none;
+}
 
 #login #login_title {
   text-align: center;
+  color: white;
 }
 #login #login_form form {
   width: 250px;
@@ -29,6 +76,9 @@
 }
 #login #login_form form .form_part {
   padding: 1ex;
+}
+#login #login_form form .form_part label {
+  color: white;
 }
 #login #login_form form .form_part input[type=text] {
   width: 100%;
@@ -38,45 +88,118 @@
 }
 #login #login_form form #div_resp {
   height: 1.5em;
+  color: #bd0808;
+  text-align: center;
+}
+#login #login_form form #div_button {
+  text-align: center;
+}
+#login #login_form form #div_button button {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: white;
+  padding: 0.3ex 0.6ex;
+  font-size: 1em;
 }
 
-#nav {
-  height: 50px;
-  max-height: 50px;
+#div_nav {
+  height: 45px;
 }
-#nav::before, #nav::after {
+#div_nav #nav {
+  background-image: linear-gradient(#FBD8D8, #FF7070);
+  border-radius: 4px 4px 0 0;
+  max-height: 45px;
+}
+#div_nav #nav::before, #div_nav #nav::after {
   content: "";
   display: block;
   clear: both;
 }
-#nav .nav_part {
+#div_nav #nav .nav_part {
   padding: 0.3ex;
   float: left;
 }
-#nav #nav_title p {
+#div_nav #nav #nav_title p {
   margin: 1ex;
 }
-#nav #nav_logout {
+#div_nav #nav #nav_logout {
   float: right;
 }
-#nav #nav_logout #logout_btn {
+#div_nav #nav #nav_logout #logout_btn {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: white;
+  background-image: linear-gradient(135deg, #f34079 40%, #fc894d);
   padding: 0.4ex;
 }
-#nav #nav_logout #logout_btn img {
+#div_nav #nav #nav_logout #logout_btn img {
   width: 30px;
   float: left;
 }
 
 #board {
   position: relative;
-  height: calc(500px - 50px - 4px);
+  height: calc(500px - 45px - 4px);
+}
+#board #board_form {
+  background-color: white;
 }
 #board #board_form form {
-  padding: 1ex 1em;
+  padding: 1ex 0;
   text-align: center;
 }
+#board #board_form form .board_sel {
+  display: inline-block;
+  position: relative;
+}
+#board #board_form form .board_sel select {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: white;
+  display: inline-block;
+  width: 100%;
+  cursor: pointer;
+  padding: 0 1ex;
+  height: 2em;
+  outline: 0;
+  font-size: 1em;
+  color: white;
+  position: relative;
+  transition: all 0.25 ease;
+}
+#board #board_form form .board_sel select::hover {
+  background: #B1E8CD;
+}
+#board #board_form form .board_sel i {
+  position: absolute;
+  right: 20px;
+  top: calc(50% - 13px);
+  width: 16px;
+  height: 16px;
+  display: block;
+  border-left: 4px solid #2AC176;
+  border-bottom: 4px solid #2AC176;
+  transform: rotate(-45deg);
+  transition: all 0.25s ease;
+}
+#board #board_form form .board_sel::hover i {
+  margin-top: 5px;
+}
+#board #board_title {
+  text-align: center;
+  background-color: white;
+}
+#board #board_title h3 {
+  margin: 0;
+  padding-bottom: 1ex;
+}
 #board #board_play {
-  height: 200px;
+  height: 220px;
+  padding-bottom: 1ex;
+  background-image: linear-gradient(#FFF, #39A4BD);
 }
 #board #board_play::before, #board #board_play::after {
   content: "";
@@ -88,40 +211,74 @@
   width: 50%;
   float: left;
 }
-#board #board_play .play_part .play_part_int .play_label {
+#board #board_play .play_part .play_label {
   margin: 0;
   text-align: center;
 }
-#board #board_play .play_part .btn_choice {
+#board #board_play .play_part .play_part_int {
+  height: calc(100% - 20px);
+}
+#board #board_play .play_part .play_part_int .btn_choice {
   margin: 1.3em auto;
   display: block;
   transition: transform 0.7s ease;
+  background-color: white;
+  border-radius: 7px;
 }
-#board #board_play .play_part .btn_choice.marked {
+#board #board_play .play_part .play_part_int .btn_choice.marked {
   border-radius: 10px;
   transform: scale(1.5);
 }
-#board #board_play .play_part .btn_choice img {
+#board #board_play .play_part .play_part_int .btn_choice img {
   width: 35px;
   float: left;
 }
-#board #board_play .play_part .bender_choice {
-  height: inherit;
+#board #board_play .play_part .play_part_int .bender_choice {
+  height: 100%;
   display: none;
   width: 100%;
   text-align: center;
   opacity: 0;
   transition: opacity 0.7s ease;
 }
-#board #board_play .play_part .bender_choice.show {
+#board #board_play .play_part .play_part_int .bender_choice.show {
   display: flex;
   opacity: 1;
 }
-#board #board_play .play_part .bender_choice img {
+#board #board_play .play_part .play_part_int .bender_choice img {
   margin: auto;
   width: 80%;
   padding: 2ex 0;
   border: 1px solid black;
+  background-color: white;
+}
+#board #board_play #board_roboitems ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#board #board_play #board_roboitems ul .roboitem {
+  padding: 1ex 1em;
+}
+#board #board_play #board_roboitems ul .roboitem img {
+  width: 25px;
+}
+#board #board_play #board_roboitems ul .roboitem span {
+  display: inline-block;
+  padding: 0 0.4ex;
+  width: calc(100% - 50px);
+  text-align: center;
+}
+#board #board_play #board_roboitems #div_btn_roboitems {
+  padding: 0 1em;
+  text-align: right;
+}
+#board #board_play #board_roboitems #div_btn_roboitems button {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: white;
+  padding: 0.3ex 0.6ex;
 }
 #board #board_back {
   padding: 1em;
@@ -131,33 +288,18 @@
   text-align: center;
 }
 #board #board_score {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: white;
+  border-radius: 0;
   text-align: center;
+  margin-bottom: 1ex;
   padding: 1ex 0;
 }
 #board #board_score h4 {
   margin: 0;
   display: inline-block;
-}
-#board #board_roboitems ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-#board #board_roboitems ul .roboitem {
-  padding: 1ex 1em;
-}
-#board #board_roboitems ul .roboitem img {
-  width: 25px;
-}
-#board #board_roboitems ul .roboitem span {
-  display: inline-block;
-  padding: 0 0.4ex;
-  width: calc(100% - 50px);
-  text-align: center;
-}
-#board #board_roboitems #div_btn_roboitems {
-  padding: 0 1em;
-  text-align: right;
 }
 #board #board_resp {
   text-align: center;
@@ -169,19 +311,26 @@
 
 #scores {
   position: relative;
-  height: calc(500px - 50px - 4px);
-  padding-bottom: 2em;
+  height: calc(500px - 45px - 4px);
+  padding-bottom: 40px;
+}
+#scores #scores_title {
+  text-align: center;
+  padding: 1ex;
+}
+#scores #scores_title h3 {
+  margin: 0 0 1ex;
+  color: white;
 }
 #scores #scores_list {
   overflow: auto;
-  max-height: 330px;
+  max-height: 350px;
   border: 1px solid transparent;
 }
 #scores #scores_list .scores_list_name {
   padding: 1ex;
   margin: 1ex;
-  border-bottom: 1px solid blue;
-  background-color: #efefef;
+  background-image: linear-gradient(to bottom right, #F9F9F9, #FF9C9C);
 }
 #scores #scores_footer::before, #scores #scores_footer::after {
   content: "";
@@ -189,6 +338,10 @@
   clear: both;
 }
 #scores #scores_footer button {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  color: white;
   float: left;
 }
 #scores #scores_footer #scores_btn_clean {

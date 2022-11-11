@@ -7,7 +7,6 @@ Login.set_resp = (mensaje) => {
     $("#login_resp").html(mensaje);
 };
 Login.set_view = () => {
-    // console.log(Cookies.get_cookies())
     if (Cookies.get_current_cookie()) {
         Board.set_view();
     }
@@ -23,7 +22,8 @@ Login.set_view_links = () => {
 };
 Login.check_admin = (e) => {
     e.preventDefault();
-    if (e.currentTarget.value == "admin") {
+    Login.set_resp("");
+    if (e.currentTarget.value.toLowerCase() == "admin") {
         $("#div_pass").show(400);
     }
     else {
@@ -32,8 +32,8 @@ Login.check_admin = (e) => {
 };
 Login.check_login = (e) => {
     e.preventDefault();
-    const user = String($("#login_name").val());
-    const pass = String($("#login_pass").val());
+    const user = String($("#login_name").val()).toLowerCase();
+    const pass = String($("#login_pass").val()).toLowerCase();
     if (user == "") {
         Login.set_resp("Only humans with name admit");
         return false;
@@ -46,7 +46,7 @@ Login.check_login = (e) => {
         Login.set_resp("Only humans admit");
         return false;
     }
-    let current = (Cookies.get_scores_cookie() || {})[user];
+    let current = Cookies.get_scores_cookie()[user];
     if (current) {
         Cookies.update_current_cookie(current);
     }

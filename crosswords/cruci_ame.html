@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <style>
+    *,
+    ::after,
+    ::before {
+      box-sizing: inherit;
+    }
+
+    body {
+      color: #000000;
+      font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+      font-size: 16px;
+      /* font-size: 1.6em; */
+      font-weight: 300;
+      letter-spacing: .01em;
+      line-height: 1.6;
+      margin: 0;
+      padding: 1em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 300;
+      letter-spacing: -.1rem;
+      margin-bottom: 1.0rem;
+      margin-top: 0;
+    }
+
+    /* h3 {
+      font-size: 2.2rem;
+      letter-spacing: -.08rem;
+      line-height: 1.35;
+    } */
+
+
+    #crossword-view {
+      font-size: 1.2em;
+    }
+
+    #crossword-resp {
+      min-height: 50px;
+    }
+
+    #crossword-resp * {
+      margin: 0;
+      text-align: center;
+    }
+
+    .crossword-board {
+      margin: 0 auto;
+      text-align: center;
+      float: left;
+      margin: 0 1em;
+      min-width: 550px;
+    }
+
+    .crossword-board .board {
+      display: inline-block;
+      /* border: 1px solid black; */
+      border-radius: 4px;
+    }
+
+    .crossword-board .line::before,
+    .crossword-board .line::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+
+    .crossword-board .cell {
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      float: left;
+      border: 1px solid black;
+    }
+
+    .crossword-board .line:nth-of-type(2) .cell {
+      border-top-width: 2px;
+    }
+
+    .crossword-board .line:last-of-type .cell {
+      border-bottom-width: 2px;
+    }
+
+    .crossword-board .cell:nth-of-type(2) {
+      border-left-width: 2px;
+    }
+
+    .crossword-board .cell:nth-of-type(2).numv {
+      border-left-width: 2px;
+    }
+
+    .crossword-board .cell:last-of-type {
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      float: left;
+      border: 1px solid black;
+      border-right-width: 2px;
+    }
+
+    .crossword-board .cell.blank {
+      margin-right: 2px;
+      border: 2px solid transparent;
+    }
+
+    .crossword-board .cell.numh {
+      margin-right: 2px;
+      border-width: 1px 2px;
+      line-height: 1.8em;
+      cursor: pointer;
+    }
+
+    .crossword-board .cell.numv {
+      margin-bottom: 2px;
+      border-width: 2px 1px;
+      line-height: 1.8em;
+      cursor: pointer;
+    }
+
+    .crossword-board .numv:last-of-type {
+      border-right-width: 2px;
+    }
+
+    .crossword-board .cell .block {
+      display: block;
+      background-color: black;
+      height: 100%;
+    }
+
+    .crossword-board .cell .cell-input {
+      -webkit-appearance: none;
+      background-color: white;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      box-sizing: inherit;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      font-size: inherit;
+      text-align: center;
+    }
+
+    .crossword-board .cell .cell-input.corrected {
+      background-color: pink;
+    }
+
+    .crossword-defs .definitions h3,
+    .crossword-defs .definitions p {
+      text-align: left;
+      margin: 0 0 1ex 0;
+    }
+
+    .crossword-defs .definitions .abbr {
+      color: green;
+      position: relative;
+    }
+
+    .crossword-defs .definitions .abbr::before {
+      /* position: relative; */
+      background-color: white;
+      color: #293133;
+      border: 1px solid #293133;
+      border-radius: 7px;
+      position: absolute;
+      top: 1.5em;
+      left: 0px;
+      padding: .3ex 1.5ex;
+      z-index: 10;
+      line-height: 1.2em;
+    }
+
+    .crossword-defs .definitions .abbr:hover::before {
+      content: attr(data-title);
+      display: block;
+      /* top: 20; */
+    }
+
+    .crossword_controles h4 {
+      display: inline-block;
+      margin: 0 0 1ex 0;
+    }
+
+    .crossword_controles button {
+      font-size: 1.2rem;
+      border: 1px solid goldenrod;
+      border-radius: 7px;
+      background-color: gold;
+      border-color: black;
+      color: black;
+    }
+
+
+    #go-up {
+      color: black;
+      display: block;
+      padding: .8em;
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      border-color: black;
+      text-decoration: none;
+      transition: all .3s ease-out;
+      background-color: papayawhip;
+      border-radius: 50%;
+    }
+
+    #go-up:before {
+      content: '▲';
+      font-size: .9em;
+      margin-left: -.7em;
+      border: solid .13em black;
+      border-radius: 10em;
+      width: 1.4em;
+      height: 1.4em;
+      line-height: 1.2em;
+      border-color: inherit;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    #go-up:hover {
+      color: pink;
+      border-color: pink;
+      bottom: 60px;
+      transform: scale(.9)
+    }
+  </style>
+  <link rel="stylesheet" href="../assets/index.css">
+
+  <script>
+    data = "{\"crossword\":[[\"i\",\"n\",\"f\",\"a\",\"n\",\"t\",\"o\",\"j\",\"u\",\"v\",\"e\",\"n\",\"i\",\"l\"],[\"r\",\"e\",\"c\",\"a\",\"u\",\"c\",\"h\",\"u\",\"t\",\"a\",\"d\",\"o\",\"r\",\"a\"],[\"a\",\"r\",\"a\",\"0\",\"c\",\"0\",\"m\",\"a\",\"i\",\"c\",\"e\",\"r\",\"a\",\"0\"],[\"d\",\"i\",\"0\",\"a\",\"h\",\"i\",\"0\",\"c\",\"l\",\"a\",\"c\",\"o\",\"0\",\"ñ\"],[\"a\",\"t\",\"o\",\"l\",\"e\",\"r\",\"i\",\"a\",\"0\",\"r\",\"a\",\"c\",\"h\",\"a\"],[\"0\",\"a\",\"c\",\"a\",\"0\",\"r\",\"e\",\"t\",\"r\",\"a\",\"n\",\"c\",\"a\",\"0\"],[\"w\",\"0\",\"a\",\"n\",\"d\",\"a\",\"0\",\"a\",\"p\",\"i\",\"0\",\"i\",\"s\",\"o\"],[\"c\",\"a\",\"l\",\"a\",\"i\",\"c\",\"a\",\"0\",\"m\",\"0\",\"l\",\"d\",\"a\",\"0\"],[\"0\",\"y\",\"e\",\"0\",\"j\",\"i\",\"c\",\"o\",\"0\",\"f\",\"a\",\"e\",\"n\",\"a\"],[\"c\",\"u\",\"a\",\"l\",\"0\",\"o\",\"t\",\"a\",\"t\",\"e\",\"0\",\"n\",\"i\",\"c\"],[\"c\",\"a\",\"r\",\"d\",\"o\",\"n\",\"a\",\"0\",\"w\",\"a\",\"t\",\"t\",\"0\",\"n\"],[\"0\",\"0\",\"0\",\"o\",\"p\",\"a\",\"0\",\"m\",\"e\",\"0\",\"c\",\"a\",\"l\",\"e\"],[\"a\",\"j\",\"e\",\"0\",\"a\",\"l\",\"e\",\"t\",\"e\",\"o\",\"0\",\"l\",\"c\",\"0\"],[\"c\",\"a\",\"l\",\"o\",\"r\",\"0\",\"s\",\"0\",\"d\",\"a\",\"r\",\"0\",\"0\",\"g\"]],\"definitions\":{\"hor\":{\"1\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> y <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Uruguay\\\">Ur.</span> Menor de 18 años con conducta delictiva.\",\"2\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span>, <span class=\\\"abbr\\\" data-title=\\\"Paraguay\\\">Par.</span> y <span class=\\\"abbr\\\" data-title=\\\"Uruguay\\\">Ur.</span> Taller donde se reparan neumáticos desgastados.\",\"3\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span>, <span class=\\\"abbr\\\" data-title=\\\"México\\\">Méx.</span>, <span class=\\\"abbr\\\" data-title=\\\"Paraguay\\\">Par.</span> y <span class=\\\"abbr\\\" data-title=\\\"República&nbsp;Dominicana\\\">R. Dom.</span> Nombre de varias aves parleras como el papagayo, la cotorra, el periquito, etc.  //  abbr. calle || capítulo || centavo.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"rural\\\">rur.</span> <span class=\\\"abbr\\\" data-title=\\\"Cuba\\\">Cuba.</span> Plantación de maíz.\",\"4\":\"<span class=\\\"abbr\\\" data-title=\\\"prefijo\\\">pref.</span> Denota origen o procedencia.  //  <span class=\\\"abbr\\\" data-title=\\\"adverbio adverbial\\\">adv.</span> <span class=\\\"abbr\\\" data-title=\\\"demostrativo\\\">dem.</span> allí. <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> en algunos lugares de Am.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"México\\\">Méx.</span> Moneda antigua de cobre.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Sonido que representa la letra ñ.\",\"5\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"México\\\">Méx.</span> Lugar donde se hace o vende atole.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span>, <span class=\\\"abbr\\\" data-title=\\\"Costa&nbsp;Rica\\\">C. Rica</span>, <span class=\\\"abbr\\\" data-title=\\\"Guatemala\\\">Guat.</span> y <span class=\\\"abbr\\\" data-title=\\\"Honduras\\\">Hond.</span> En el mundo del deporte especialmente, mala racha.\",\"6\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Argentina\\\">Arg.</span> y <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span> excremento.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Colombia\\\">Col.</span> y <span class=\\\"abbr\\\" data-title=\\\"Cuba\\\">Cuba.</span> Freno de distintas formas de un carruaje.\",\"7\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Vigesimocuarta letra del abecedario español, que representa el fonema consonántico bilabial sonoro en palabras de origen germánico, como en Wamba, wagneriano, Westfalia, y en topónimos y antropónimos del polaco o el neerlandés, como en Kowalski, Van der Weyden, y una /u/ semiconsonante en los anglicismos, como en washingtoniano o whisky, además de en voces transcritas de otras lenguas, como en wau.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span>, Chile, <span class=\\\"abbr\\\" data-title=\\\"Colombia\\\">Col.</span>, <span class=\\\"abbr\\\" data-title=\\\"Guatemala\\\">Guat.</span> y Perú. andas (‖ tablero sostenido por dos varas paralelas).  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Argentina\\\">Arg.</span> y <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span> Mazamorra de maíz morado triturado, sazonada con diversos ingredientes.  //  <span class=\\\"abbr\\\" data-title=\\\"elemento\\\">elem.</span> <span class=\\\"abbr\\\" data-title=\\\"compositivo\\\">compos.</span> Significa 'igual'.\",\"8\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Honduras\\\">Hond.</span> Planta trepadora herbácea de la América tropical, de las cucurbitáceas, de flores amarillas y fruto en baya amarilla carnosa comestible, cubierta de verrugas con semillas rojas. En la medicina tradicional la hoja en cocción o en emplastos se usa con fines diversos.  //  abbr. meridies.  //  abbr. licenciado, -da.\",\"9\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Letra y.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Cuba\\\">Cuba.</span> Ramal de muchos cordones con que se rematan los dos extremos de una hamaca.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Guatemala\\\">Guat.</span> Trabajo que se hace en una hacienda en horas extraordinarias.\",\"10\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> <span class=\\\"abbr\\\" data-title=\\\"interrogativo\\\">interrog.</span> Pregunta por la identidad de una o varias personas o cosas de un conjunto identificable. <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> con referencia deíctica o anafórica. <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> en algunos lugares de Am.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"México\\\">Méx.</span> guadua.  //  abbr. Nicaragua.\",\"11\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Cuba\\\">Cuba.</span> Planta de la familia de las euforbiáceas con aspecto de cato.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"electricidad electrónica\\\">Electr.</span> vatio.  //  abbr. nota.\",\"12\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> <span class=\\\"abbr\\\" data-title=\\\"despectivo\\\">despect.</span> <span class=\\\"abbr\\\" data-title=\\\"coloquial\\\">coloq.</span> <span class=\\\"abbr\\\" data-title=\\\"Argentina\\\">Arg.</span>, <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span> y <span class=\\\"abbr\\\" data-title=\\\"Uruguay\\\">Ur.</span> Tonto, idiota. <span class=\\\"abbr\\\" data-title=\\\"Usado&nbsp;también\\\">U. t.</span> <span class=\\\"abbr\\\" data-title=\\\"como\\\">c.</span> <span class=\\\"abbr\\\" data-title=\\\"sustantivo\\\">s.</span>  //  <span class=\\\"abbr\\\" data-title=\\\"pronombre\\\">pron.</span> <span class=\\\"abbr\\\" data-title=\\\"personal\\\">person.</span> 1.ª <span class=\\\"abbr\\\" data-title=\\\"persona\\\">pers.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> y <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"singular\\\">sing.</span> Forma que, en acusativo o dativo, designa a la persona que habla o escribe.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Colombia\\\">Col.</span> y <span class=\\\"abbr\\\" data-title=\\\"Ecuador\\\">Ec.</span> Moneda antigua de cuarto de real.\",\"13\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Panamá\\\">Pan.</span> Desaire, agravio, desprecio o falta de respeto.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Costa&nbsp;Rica\\\">C. Rica</span>. Actitud violenta o sorpresiva. <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span><span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> en pl.  //  abbr. loco citato.\",\"14\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Sensación que se experimenta ante una elevada temperatura. En <span class=\\\"abbr\\\" data-title=\\\"Andalucía\\\">And.</span> y algunos lugares de <span class=\\\"abbr\\\" data-title=\\\"América\\\">Am.</span>, <span class=\\\"abbr\\\" data-title=\\\"usado&nbsp;también\\\">u. t.</span> <span class=\\\"abbr\\\" data-title=\\\"como\\\">c.</span> <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span>  //  abbr. sustantivo.  //  <span class=\\\"abbr\\\" data-title=\\\"pronominal verbo&nbsp;pronominal\\\">prnl.</span> <span class=\\\"abbr\\\" data-title=\\\"México\\\">Méx.</span> darse por vencido (‖ reconocerse equivocado).  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Séptima letra del abecedario español, que representa, ante las vocales e, i, el fonema consonántico fricativo velar sordo, <span class=\\\"abbr\\\" data-title=\\\"por&nbsp;ejemplo\\\">p. ej.</span> en gente, y en los demás casos el fonema consonántico velar sonoro, <span class=\\\"abbr\\\" data-title=\\\"por&nbsp;ejemplo\\\">p. ej.</span> en gato.\"},\"ver\":{\"1\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> <span class=\\\"abbr\\\" data-title=\\\"desusado\\\">desus.</span> forajido.  //  abbr. water closet.  //  abbr. casilla de correo.  //  Símbolo del Actinio.\",\"2\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Molusco gasterópodo marino, de concha gruesa, redonda, con boca o abertura semicircular y espira casi plana.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Árbol de América, de la familia de las rutáceas, de madera blanda, que se raja con facilidad y está cubierta de púas, hojas compuestas de hojuelas lanceoladas, dentadas, verdosas, algo vellosas por el envés y en número impar. Tiene flores pequeñas y fruto compuesto de cinco cápsulas unidas por la parte inferior y rojas cuando están maduras. Se emplea en construcción y en medicina.  //  <span class=\\\"abbr\\\" data-title=\\\"interjección interjectivo\\\">interj.</span> <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> para indicar la risa, la burla o la incredulidad. <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> repetida.\",\"3\":\"abbr. fábrica.  //  <span class=\\\"abbr\\\" data-title=\\\"intransitivo verbo&nbsp;intransitivo\\\">intr.</span> <span class=\\\"abbr\\\" data-title=\\\"desusado\\\">desus.</span> Dicho de los gusanos: Hacer los capullos ocales.  //  <span class=\\\"abbr\\\" data-title=\\\"artículo\\\">art.</span> <span class=\\\"abbr\\\" data-title=\\\"determinado\\\">deter.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> y <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Indica que lo denotado por el sustantivo o por el sintagma nominal al que precede recibe interpretación genérica.\",\"4\":\"abbr. a la atención.  //  <span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> Dicho de una persona: De un pueblo germánico que, en unión con otros, invadió la península ibérica a principios del siglo <span class=\\\"abbr\\\" data-title=\\\"véase\\\">V.</span> <span class=\\\"abbr\\\" data-title=\\\"Usado&nbsp;también\\\">U. t.</span> <span class=\\\"abbr\\\" data-title=\\\"como\\\">c.</span> <span class=\\\"abbr\\\" data-title=\\\"sustantivo\\\">s.</span>  //  abbr. licenciado, -da.  //  <span class=\\\"abbr\\\" data-title=\\\"química\\\">Quím.</span> Símbolo del elemento con número atómico 8.\",\"5\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Colombia\\\">Col.</span> Larva que se introduce en la piel de los animales.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"desusado\\\">desus.</span> dije.  //  <span class=\\\"abbr\\\" data-title=\\\"transitivo verbo&nbsp;transitivo\\\">tr.</span> <span class=\\\"abbr\\\" data-title=\\\"coloquial\\\">coloq.</span> <span class=\\\"abbr\\\" data-title=\\\"España\\\">Esp.</span> Hacer objeto de una opa a una sociedad.\",\"6\":\"Símbolo del Tecnecio.  //  <span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> <span class=\\\"abbr\\\" data-title=\\\"matemáticas\\\">Mat.</span> Dicho de una raíz o de una cantidad radical: Que no puede expresarse exactamente con números enteros ni racionales.\",\"7\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"física\\\">Fís.</span> ohmio.  //  abbr. id est.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Certificación, testimonio, asiento o constancia oficial de un hecho.  //  <span class=\\\"abbr\\\" data-title=\\\"prefijo\\\">pref.</span> Denota separación.\",\"8\":\"<span class=\\\"abbr\\\" data-title=\\\"interjección interjectivo\\\">interj.</span> <span class=\\\"abbr\\\" data-title=\\\"El&nbsp;Salvador\\\">El Salv.</span> y <span class=\\\"abbr\\\" data-title=\\\"Nicaragua\\\">Nic.</span> <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> para expresar asco.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Honduras\\\">Hond.</span> Juego infantil en el que un niño lanza una pelota al aire y, antes de que caiga, debe decir con rapidez un texto y hacer lo que le indica otro niño.  //  Símbolo del Meitnerio.\",\"9\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> <span class=\\\"abbr\\\" data-title=\\\"derecho\\\">Der.</span> Dicho de un período de tiempo: hábil.  //  abbr. revoluciones por minuto.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Tejido escocés de lana, con mezcla de hilos de colores, que se usa para hacer ropa cómoda e informal.\",\"10\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Argentina\\\">Arg.</span> y <span class=\\\"abbr\\\" data-title=\\\"Uruguay\\\">Ur.</span> Ternero nonato, que ha sido extraído del vientre de la madre al tiempo de sacrificarla.  //  <span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> Que causa desagrado o aversión.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Honduras\\\">Hond.</span> Juego infantil en el que un niño lanza una pelota al aire y, antes de que caiga, debe decir con rapidez un texto y hacer lo que le indica otro niño.\",\"11\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> y <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"El&nbsp;Salvador\\\">El Salv.</span> y <span class=\\\"abbr\\\" data-title=\\\"México\\\">Méx.</span> Persona que ayuda a los participantes en una reunión, congreso, etc.  //  <span class=\\\"abbr\\\" data-title=\\\"artículo\\\">art.</span> <span class=\\\"abbr\\\" data-title=\\\"determinado\\\">deter.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> y <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Antepuesto a un sustantivo o a un sintagma nominal forma una expresión definida de referente consabido.  //  Símbolo del Tecnecio.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Decimonovena letra del abecedario español, que puede representar el fonema consonántico vibrante simple, <span class=\\\"abbr\\\" data-title=\\\"por&nbsp;ejemplo\\\">p. ej.</span> en brazo y cara, o el fonema consonántico vibrante múltiple, <span class=\\\"abbr\\\" data-title=\\\"por&nbsp;ejemplo\\\">p. ej.</span> en rojo e israelí.\",\"12\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> Situado en el noroeste.\",\"13\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Furia o violencia de los elementos de la naturaleza.  //  <span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> Dicho de una moneda: Acuñada por el sultán de Marruecos, Hasán.  //  abbr. loco citato.\",\"14\":\"<span class=\\\"abbr\\\" data-title=\\\"artículo\\\">art.</span> <span class=\\\"abbr\\\" data-title=\\\"determinado\\\">deter.</span> <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> y <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Antepuesto a un sustantivo o a un sintagma nominal forma una expresión definida de referente consabido.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"rural\\\">rur.</span> <span class=\\\"abbr\\\" data-title=\\\"América\\\">Am.</span> Tratamiento que se antepone al nombre de una mujer.  //  <span class=\\\"abbr\\\" data-title=\\\"conjunción\\\">conj.</span> <span class=\\\"abbr\\\" data-title=\\\"disyuntivo\\\">disyunt.</span> <span class=\\\"abbr\\\" data-title=\\\"Usado\\\">U.</span> generalmente ante cada uno de dos o más términos contrapuestos.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Enfermedad de la piel caracterizada por una inflamación crónica de las glándulas sebáceas, especialmente en la cara y en la espalda.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Séptima letra del abecedario español, que representa, ante las vocales e, i, el fonema consonántico fricativo velar sordo, <span class=\\\"abbr\\\" data-title=\\\"por&nbsp;ejemplo\\\">p. ej.</span> en gente, y en los demás casos el fonema consonántico velar sonoro, <span class=\\\"abbr\\\" data-title=\\\"por&nbsp;ejemplo\\\">p. ej.</span> en gato.\"}},\"file\":\"crucigrama_america_1670593577\",\"title\":\"Crucigrama América\"}";
+    active_links = function () {
+      document.getElementById("go-up").addEventListener("click", function (e) {
+        cross = document.getElementById("crossword-board")
+        window.scrollTo({ top: window.scrollY + (cross.getBoundingClientRect().y - 50), behavoir: 'smooth' })
+      })
+
+      for (elem of document.getElementsByClassName("num_link")) {
+        elem.addEventListener("click", function (e) {
+          id = e.currentTarget.getAttribute("id")
+          def = document.getElementById(id.replace("num", "def"))
+          window.scrollTo({ top: window.scrollY + def.getBoundingClientRect().y, behavior: 'smooth' })
+        })
+      }
+
+      for (elem of document.getElementsByClassName("cell-input")) {
+        elem.addEventListener("click", function (e) {
+          e.currentTarget.select()
+        })
+        elem.addEventListener("blur", function (e) {
+          arr_id = e.currentTarget.getAttribute("id").split("-");
+          value = e.currentTarget.value;
+          if (add_value_to_crossword(arr_id[1], arr_id[2], value) && is_full_board()) {
+            if (check_end()) {
+              delete_cookie_board(data.file);
+              set_resp("Has completado el crucigrama");
+            } else {
+              set_resp("Hay palabras incorrectas");
+            }
+          }
+        })
+      }
+
+      document.getElementById("btn-correct").addEventListener("click", function (e) {
+        for (i = 0; i < board.length; i++) {
+          for (j = 0; j < board[i].length; j++) {
+            cell = board[i][j];
+            if (cell != "" && !/\*/.test(cell) && cell != crossword[i][j]) {
+              board[i][j] = "*" + cell;
+            }
+          }
+        }
+        load_board(board);
+        active_links();
+
+        set_resp("Hay tienes una ayuda");
+      })
+    }
+
+    add_value_to_crossword = function (id_line, id_col, value) {
+
+      input = document.getElementById("c-" + id_line + '-' + id_col);
+      prev_val = document.getElementById("c-" + id_line + '-' + id_col).getAttribute("value");
+
+      if (/[a-zñ]/i.test(value) && prev_val != value) {
+        board[id_line][id_col] = value.toUpperCase();
+        set_cookie_board(data.file, board);
+        input.value = value.toUpperCase();
+        input.classList.remove("corrected");
+        set_resp("Has colocado una letra");
+        return true;
+      } else {
+        if (value == "") {
+          input.classList.remove("corrected");
+        }
+        set_resp();
+        input.innerHTML = "";
+        return false
+      }
+    }
+
+    check_end = function () {
+      end = true;
+      for (i = 0; i < board.length; i++) {
+        for (j = 0; j < board[i].length; j++) {
+          if (board[i][j] != crossword[i][j]) { end = false; }
+        }
+      }
+      return end;
+    }
+
+    delete_cookie_board = function(name) {
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;Samesite=none;Secure=true;";
+    }
+
+    get_blank_crossword = function () {
+      blank = []
+      for (x = 0; x < 11; x++) {
+        aux = [];
+        for (y = 0; y < 11; y++) { aux.push(""); }
+        blank.push(aux);
+      }
+      return blank;
+    }
+
+    load_board = function (board) {
+      if (typeof board == "undefined") {
+        board = get_blank_crossword()
+      }
+
+      html = ['<div class="board">']
+
+      html.push('<div class="line">')
+      for (num = 0; num <= board.length; num++) {
+        if (num == 0) {
+          html.push('<div class="cell blank"></div>');
+        } else {
+          html.push('<div id="num-ver-' + num + '" class="cell numv num_link" phx-hook="CrosswordNumToDef"><span>' + num + '</span></div>')
+        }
+      }
+      html.push("</div>")
+
+      for (i = 0; i < board.length; i++) {
+        html.push('<div class="line">')
+        html.push('<div  id="num-hor-' + (i + 1) + '" class="cell numh num_link" phx-hook="CrosswordNumToDef"><span>' + (i + 1) + '</span></div>')
+        for (j = 0; j < board[i].length; j++) {
+          var id_i = "c-" + i + "-" + j
+          cell = board[i][j]
+          html.push('<div class="cell" id="cell-' + i + '-' + j + '">')
+          if (/\-/.test(cell)) {
+            html.push('<input id="' + id_i + '" class="cell-input" maxlength="1" phx-blur="crossword-blur" value="">')
+          } else if (/\*/.test(cell)) {
+            html.push('<input id="' + id_i + '" class="cell-input corrected" maxlength="1" phx-blur="crossword-blur" value="' + cell.replace("*", "") + '">')
+          } else if (cell === "0") {
+            html.push('<span class="block">' + cell + '</span>')
+          } else {
+            html.push('<input id="' + id_i + '" class="cell-input" maxlength="1" phx-blur="crossword-blur" value="' + cell + '">')
+          }
+          html.push("</div>")
+        }
+        html.push("</div>")
+      }
+      html.push('</div>')
+
+      document.getElementById("crossword-board").innerHTML = html.join("")
+    }
+
+    load_defs = function (definitions) {
+      html = ['<div class="definitions">']
+      for (ori in definitions) {
+        html.push('<div class="orientacion">')
+        html.push('<h3>' + (ori == "hor" ? "Horizontal" : "Vertical") + '</h3>')
+        html.push('<p>')
+        for (num in definitions[ori]) {
+          html.push('<span id="def-' + ori + '-' + num + '">' + num + '. - </span><span>' + definitions[ori][num] + '</span><br>')
+          // html.push('<span id="def-' + ori + '-' + num + '">' + num + '. - </span><span>' + definitions[ori][num].join(" // ") + '</span><br>')
+        }
+        html.push('</p></div>')
+      }
+      html.push('</div>')
+      document.getElementById("crossword-defs").innerHTML = html.join("")
+    }
+
+    init_crossword = function () {
+      data = JSON.parse(data);
+      crossword = data.crossword.map(line => {
+        return line.map(let => { return let.toUpperCase(); });
+      });
+
+      prev = get_cookie_board(data.file);
+      board = false;
+      if(prev){
+        if (confirm("Se ha detectado una partida previa. Deseas continuarla?")){
+          board = prev;
+        } else {
+          delete_cookie_board(data.file);
+        }
+      }
+      if(!board){
+        board = crossword.map(line => {
+          return line.map(let => { return let == 0 ? let : ""; });
+        });
+      }
+
+      load_board(board);
+      load_defs(data.definitions);
+
+      document.getElementById("crossword-title").innerHTML = data.title;
+      active_links();
+      set_resp("Crucigrama preparado");
+    }
+
+    is_full_board = function () {
+      for(line of board){
+        for(letra of line){
+          if (letra == "" || letra == "-1") { return false; }
+        }
+      }
+      return true;
+    }
+
+    get_cookie_board = function(name) {
+      let cookies = document.cookie;
+      for (cookie of document.cookie.split("; ")){
+        a_cookie = cookie.split("=");
+        if (a_cookie[0] == name && a_cookie[1] != ""){ 
+          return JSON.parse(a_cookie[1]);
+        }
+      }
+      return false;
+    }
+
+    set_cookie_board = function (cname, board, exdays = 1) {
+      board_str = JSON.stringify(board);
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+      document.cookie = cname + "=" + board_str + ";expires=" + d.toUTCString() + ";path=/;Samesite=none;Secure=true;";
+    }
+
+    set_resp = function (resp) {
+      text = "";
+      if (typeof resp != "undefined" && resp != "") {
+        text = "<h3>" + resp + "</h3>";
+      }
+      document.getElementById("crossword-resp").innerHTML = text;
+    }
+
+    window.onload = function () {
+      init_crossword();
+
+    }
+
+  </script>
+</head>
+
+<body>
+  <ul class="hack_nav">
+    <li><a href="../">Home</a></li>
+    <li><a href="../sudoku">Sudoku</a></li>
+    <li><a href="../paper">Piedra-Papel-Tijera</a></li>
+    <li><a href="../crosswords">Crucigramas</a></li>
+  </ul>
+  <div id="crossword-view">
+    <h2 id="crossword-title">Crossword</h2>
+    <div id="crossword-resp"></div>
+    <div id="crossword-board" class="crossword-board"></div>
+    <div class="crossword_controles">
+      <button id="btn-correct">Correct crossword</button>
+    </div>
+    <div id="crossword-defs" class="crossword-defs"></div>
+    <div id="go-up" class="go-up" phx-hook="CrosswordGoUp">Go up</div>
+  </div>
+</body>
+
+</html>

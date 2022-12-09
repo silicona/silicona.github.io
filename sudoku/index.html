@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacklab Games</title>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script type="module" src="index.js"></script>
+  <link rel="stylesheet" type="text/css" href="live.css">
+</head>
+
+<body>
+  <ul class="hack_nav">
+    <li><a href="../">Home</a></li>
+    <li><a href="../paper">Piedra-Papel-Tijera</a></li>
+    <li><a href="../crosswords">Crucigramas</a></li>
+  </ul>
+
+  <div id="sudoku-view">
+    <h2>Sudoku</h2>
+
+    <div class="sudoku-board">
+      <div id="resp" class="sudoku-resp"></div>
+      <div id="board" class="board"></div>
+
+      <div class="controles">
+        <div class="botones">
+          <label class="custom_check">
+            <input id="check_posibles" type="checkbox" value="1">Activar posibilidades<i></i>
+          </label>
+          <label class="custom_check">
+            <input id="check_corregir" type="checkbox" value="1">Corregir sudoku<i></i>
+          </label>
+        </div>
+        <div class="botones">
+          <label for="sel_dif" style="display: inline-block">Dificultad</label>
+          <select id="sel_dif" phx-blur="sudoku-asignar-dif"></select>
+          <input id="btn_iniciar" type="submit" phx-click="sudoku-reiniciar" value="Iniciar sudoku">
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

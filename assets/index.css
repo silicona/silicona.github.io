@@ -1,0 +1,63 @@
+.lista {
+  list-style: none;
+
+}
+
+.lista:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.lista li {
+  float: left;
+  margin: 1em;
+
+}
+
+.lista a {
+  width: 250px;
+  display: block;
+  border: 2px solid black;
+  text-align: center;
+  font-size: 2em;
+  text-decoration: none;
+}
+
+.lista img {
+  width: 100%;
+  height: 250px;
+}
+
+.hack_nav {
+  background-color: white;
+  border: 2px solid black;
+  list-style: none;
+
+}
+
+.hack_nav::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.hack_nav li {
+  float: left;
+  margin: 1ex;
+}
+
+.hack_nav a {
+  color: black;
+  padding: .3ex .6ex;
+  border-radius: 7px;
+  border-color: blue;
+  text-decoration: none;
+  font-size: 1.3em;
+  
+  transition: all .7s;
+}
+
+.hack_nav a:hover {
+  background-color:rgba(131, 192, 253, 0.5);
+}

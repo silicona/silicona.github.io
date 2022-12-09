@@ -1,0 +1,325 @@
+* {
+  box-sizing: border-box;
+}
+
+.hack_nav {
+  background-color: white;
+  border: 2px solid black;
+  list-style: none;
+
+}
+
+.hack_nav::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.hack_nav li {
+  float: left;
+  margin: 1ex;
+}
+
+.hack_nav a {
+  color: black;
+  padding: .3ex .6ex;
+  border-radius: 7px;
+  border-color: blue;
+  text-decoration: none;
+  font-size: 1.3em;
+  
+  transition: all .7s;
+}
+
+.hack_nav a:hover {
+  background-color:rgba(131, 192, 253, 0.5);
+}
+
+.sudoku-resp {
+  min-height: 50px;
+}
+.sudoku-resp h3 {
+  margin: 0;
+}
+
+.sudoku-board {
+  margin: 0 auto;
+  width: 500px;
+
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.sudoku-board .board {
+  display: inline-block;
+  border: 1px solid red;
+  border-radius: 4px;
+}
+
+
+.sudoku-board .board.corregir .cell > .ok {
+  border-color: green;
+}
+
+.sudoku-board .board.corregir .cell > .ko {
+  border-color: red;
+}
+
+
+.sudoku-board .line::before, .sudoku-board .line::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.sudoku-board .cell {
+  width: 2em;
+  height: 2em;
+  text-align: center;
+  float: left;
+  /* padding: .1em; */
+  border: 1px solid black;
+}
+
+.sudoku-board .cell:nth-child(3n + 1){ border-left-color: blue; border-left-width: 2px;}
+.sudoku-board .line:nth-child(3n) .cell{ border-bottom-color: blue; border-bottom-width: 2px;}
+.sudoku-board .cell:nth-child(3n){ border-right-color: blue; border-right-width: 2px;}
+.sudoku-board .line:nth-child(3n + 1) .cell{ border-top-color: blue; border-top-width: 2px;}
+
+.sudoku-board .cell:first-child { border-left-color: red; }
+.sudoku-board .cell:last-child { border-right-color: red; }
+.sudoku-board .line:first-child .cell { border-top-color: red; }
+.sudoku-board .line:last-child .cell { border-bottom-color: red;}
+
+.sudoku-board .cell .cell-input {
+  -webkit-appearance: none;
+  background-color: white;
+  border: 3px solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: inherit;
+  height: 100%;
+  width: 100%;
+  padding: 0 .4em;
+  margin: 0;
+  font-size: inherit;
+  line-height: 1.7em;
+}
+.sudoku-board .cell .base {
+  cursor: not-allowed; 
+  display: inline-block;
+}
+
+.sudoku-board .cell .cell-input.ko-visible {
+  background-color: pink;
+}
+
+.sudoku-board .controles {
+  margin-top: 2em
+}
+
+.sudoku-board .botones {
+  width: 50%;
+  float: left;
+}
+
+.custom_check {
+	position: relative;
+	margin-bottom: 30px;
+	padding: 5px 0 5px 60px;
+	display: block;
+  text-align: left;
+  line-height: 1.3em;
+}
+
+.custom_check input {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+  visibility: hidden;
+	position: absolute;
+	right: 0;
+}
+
+.custom_check input + i {
+	background: #f0f0f0;
+	border: 2px solid rgba(0, 0, 0, .2);
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.custom_check input[type="checkbox"] + i { /* Todos los <i> después de un checkbox */
+	width: 52px;
+	height: 30px;
+	border-radius: 15px;
+}
+
+.custom_check input[type="checkbox"] + i:before {
+	content: '';
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	background: #fff;
+
+	position: absolute;
+	left: 0;
+	top: 0;
+	-webkit-box-shadow: 3px 0 3px 0 rgba(0, 0, 0, .2);
+	box-shadow: 3px 0 3px 0 rgba(0, 0, 0, .2);
+}
+
+.custom_check input[type="checkbox"]:checked + i:before {
+
+	left: 22px;
+	-webkit-box-shadow: 3px 0 3px 0 rgba(0, 0, 0, .2);
+	box-shadow: 3px 0 3px 0 rgba(0, 0, 0, .2);
+}
+
+.custom_check input[type="checkbox"]:checked + i { background: #2AC176; }
+
+.custom_check input[type="checkbox"] + i:after {
+	content: 'ON';
+	position: absolute;
+	font-size: 10px;
+	color: rgba(255, 255, 255, .6);
+	top: 3px;
+	left: 4px;
+	opacity: 0;
+	transition: all .25s ease .25s;
+}
+
+.custom_check input[type='checkbox']:checked + i:after { opacity: 1; }
+
+#sel_dif {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 8" width="30"><path fill="%23d1d1d1" d="M0,0l6,8l6-8"/></svg>') center right no-repeat;
+padding-right: 3em;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: 0.1rem solid #d1d1d1;
+  border-radius: .4rem;
+  box-shadow: none;
+  box-sizing: inherit;
+  height: 3em;
+  padding: .6em 3em .7em 1em;
+}
+
+#btn_iniciar {
+  background-color: #0069d9;
+  border: 0.1rem solid #0069d9;
+  border-radius: .4em;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 700;
+  letter-spacing: .1em;
+  line-height: 2em;
+  padding: 1em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin: 1em;
+  width: 70%;
+}
+
+#spinner {
+  background-color: black;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lds-grid {
+  display: inline-block;
+  position: relative;
+  /* width: 400px;
+  height: 400px; */
+  width: 160px;
+  height: 160px;
+  /* width: 80px;
+  height: 80px; */
+}
+.lds-grid div {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  /* width: 16px;
+  height: 16px; */
+  border-radius: 50%;
+  background: #fff;
+  animation: lds-grid 1.2s linear infinite;
+}
+.lds-grid div:nth-child(1) {
+  top: 16px;
+  left: 16px;
+  /* top: 8px;
+  left: 8px; */
+  animation-delay: 0s;
+}
+.lds-grid div:nth-child(2) {
+  top: 16px;
+  left: 64px;
+  /* top: 8px;
+  left: 32px; */
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(3) {
+  top: 16px;
+  left: 112px;
+  /* top: 8px;
+  left: 56px; */
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(4) {
+  top: 64px;
+  left: 16px;
+  /* top: 32px;
+  left: 8px; */
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(5) {
+  top: 64px;
+  left: 64px;
+  /* top: 32px;
+  left: 32px; */
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(6) {
+  top: 64px;
+  left: 112px;
+  /* top: 32px;
+  left: 56px; */
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(7) {
+  top: 112px;
+  left: 16px;
+  /* top: 56px;
+  left: 8px; */
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(8) {
+  top: 112px;
+  left: 64px;
+  /* top: 56px;
+  left: 32px; */
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(9) {
+  top: 112px;
+  left: 112px;
+  /* top: 56px;
+  left: 56px; */
+  animation-delay: -1.6s;
+}
+@keyframes lds-grid {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hacklab - Crucigrama técnico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <style>
+    *,
+    ::after,
+    ::before {
+      box-sizing: inherit;
+    }
+
+    body {
+      color: #000000;
+      font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+      font-size: 16px;
+      /* font-size: 1.6em; */
+      font-weight: 300;
+      letter-spacing: .01em;
+      line-height: 1.6;
+      margin: 0;
+      padding: 1em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 300;
+      letter-spacing: -.1rem;
+      margin-bottom: 1.0rem;
+      margin-top: 0;
+    }
+
+    /* h3 {
+      font-size: 2.2rem;
+      letter-spacing: -.08rem;
+      line-height: 1.35;
+    } */
+
+
+    #crossword-view {
+      font-size: 1.2em;
+    }
+
+    #crossword-resp {
+      min-height: 50px;
+    }
+
+    #crossword-resp * {
+      margin: 0;
+      text-align: center;
+    }
+
+    .crossword-board {
+      margin: 0 auto;
+      text-align: center;
+      float: left;
+      margin: 0 1em;
+      min-width: 550px;
+    }
+
+    .crossword-board .board {
+      display: inline-block;
+      /* border: 1px solid black; */
+      border-radius: 4px;
+    }
+
+    .crossword-board .line::before,
+    .crossword-board .line::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+
+    .crossword-board .cell {
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      float: left;
+      border: 1px solid black;
+    }
+
+    .crossword-board .line:nth-of-type(2) .cell {
+      border-top-width: 2px;
+    }
+
+    .crossword-board .line:last-of-type .cell {
+      border-bottom-width: 2px;
+    }
+
+    .crossword-board .cell:nth-of-type(2) {
+      border-left-width: 2px;
+    }
+
+    .crossword-board .cell:nth-of-type(2).numv {
+      border-left-width: 2px;
+    }
+
+    .crossword-board .cell:last-of-type {
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      float: left;
+      border: 1px solid black;
+      border-right-width: 2px;
+    }
+
+    .crossword-board .cell.blank {
+      margin-right: 2px;
+      border: 2px solid transparent;
+    }
+
+    .crossword-board .cell.numh {
+      margin-right: 2px;
+      border-width: 1px 2px;
+      line-height: 1.8em;
+      cursor: pointer;
+    }
+
+    .crossword-board .cell.numv {
+      margin-bottom: 2px;
+      border-width: 2px 1px;
+      line-height: 1.8em;
+      cursor: pointer;
+    }
+
+    .crossword-board .numv:last-of-type {
+      border-right-width: 2px;
+    }
+
+    .crossword-board .cell .block {
+      display: block;
+      background-color: black;
+      height: 100%;
+    }
+
+    .crossword-board .cell .cell-input {
+      -webkit-appearance: none;
+      background-color: white;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      box-sizing: inherit;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      font-size: inherit;
+      text-align: center;
+    }
+
+    .crossword-board .cell .cell-input.corrected {
+      background-color: pink;
+    }
+
+    .crossword-defs .definitions h3,
+    .crossword-defs .definitions p {
+      text-align: left;
+      margin: 0 0 1ex 0;
+    }
+
+    .crossword-defs .definitions .abbr {
+      color: green;
+      position: relative;
+    }
+
+    .crossword-defs .definitions .abbr::before {
+      /* position: relative; */
+      background-color: white;
+      color: #293133;
+      border: 1px solid #293133;
+      border-radius: 7px;
+      position: absolute;
+      top: 1.5em;
+      left: 0px;
+      padding: .3ex 1.5ex;
+      z-index: 10;
+      line-height: 1.2em;
+    }
+
+    .crossword-defs .definitions .abbr:hover::before {
+      content: attr(data-title);
+      display: block;
+      /* top: 20; */
+    }
+
+    .crossword_controles h4 {
+      display: inline-block;
+      margin: 0 0 1ex 0;
+    }
+
+    .crossword_controles button {
+      font-size: 1.2rem;
+      border: 1px solid goldenrod;
+      border-radius: 7px;
+      background-color: gold;
+      border-color: black;
+      color: black;
+    }
+
+
+    #go-up {
+      color: black;
+      display: block;
+      padding: .8em;
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      border-color: black;
+      text-decoration: none;
+      transition: all .3s ease-out;
+      background-color: papayawhip;
+      border-radius: 50%;
+    }
+
+    #go-up:before {
+      content: '▲';
+      font-size: .9em;
+      margin-left: -.7em;
+      border: solid .13em black;
+      border-radius: 10em;
+      width: 1.4em;
+      height: 1.4em;
+      line-height: 1.2em;
+      border-color: inherit;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    #go-up:hover {
+      color: pink;
+      border-color: pink;
+      bottom: 60px;
+      transform: scale(.9)
+    }
+  </style>
+
+  <link rel="stylesheet" href="../assets/index.css">
+
+  <script>
+    data = "{\"crossword\":[[\"f\",\"l\",\"o\",\"c\",\"u\",\"l\",\"a\",\"c\",\"i\",\"o\",\"n\"],[\"l\",\"a\",\"p\",\"a\",\"r\",\"o\",\"t\",\"o\",\"m\",\"i\",\"a\"],[\"e\",\"j\",\"e\",\"c\",\"u\",\"t\",\"o\",\"r\",\"i\",\"a\",\"r\"],[\"b\",\"a\",\"r\",\"i\",\"t\",\"o\",\"n\",\"a\",\"l\",\"0\",\"t\"],[\"i\",\"0\",\"a\",\"l\",\"a\",\"0\",\"d\",\"0\",\"l\",\"u\",\"e\"],[\"t\",\"e\",\"0\",\"l\",\"u\",\"n\",\"e\",\"t\",\"a\",\"0\",\"x\"],[\"i\",\"l\",\"e\",\"o\",\"0\",\"u\",\"s\",\"o\",\"0\",\"q\",\"0\"],[\"s\",\"o\",\"l\",\"0\",\"p\",\"e\",\"0\",\"g\",\"r\",\"u\",\"a\"],[\"0\",\"t\",\"i\",\"s\",\"u\",\"r\",\"i\",\"a\",\"0\",\"e\",\"n\"],[\"d\",\"e\",\"d\",\"o\",\"l\",\"a\",\"r\",\"0\",\"y\",\"o\",\"d\"],[\"o\",\"0\",\"e\",\"n\",\"e\",\"0\",\"e\",\"g\",\"o\",\"0\",\"o\"]],\"definitions\":{\"hor\":{\"1\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"química\\\">Quím.</span> Agregación de partículas sólidas en una dispersión coloidal, en general por la adición de algún agente.\",\"2\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"medicina\\\">Med.</span> Operación quirúrgica que consiste en abrir las paredes abdominales y el peritoneo.\",\"3\":\"<span class=\\\"abbr\\\" data-title=\\\"transitivo verbo&nbsp;transitivo\\\">tr.</span> <span class=\\\"abbr\\\" data-title=\\\"derecho\\\">Der.</span> Dar firmeza de cosa juzgada a un fallo o pronunciamiento judicial. U. <span class=\\\"abbr\\\" data-title=\\\"terminación\\\">t.</span> <span class=\\\"abbr\\\" data-title=\\\"como\\\">c.</span> prnl.\",\"4\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> <span class=\\\"abbr\\\" data-title=\\\"música\\\">Mús.</span> Perteneciente o relativo al barítono o a su voz.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Vigesimoprimera letra del abecedario español, que representa el fonema consonántico oclusivo dental sordo.\",\"5\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"filosofía\\\">Fil.</span> En la lógica escolástica, letra que representa la proposición particular afirmativa.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"botánica\\\">Bot.</span> Cada uno de los pétalos laterales de la corola amariposada.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Sonido que representa la letra d.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"medicina\\\">Med.</span> sífilis.\",\"6\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Infusión de las hojas del té.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"arquitectura\\\">Arq.</span> Bovedilla en forma de media luna para dar luz a la bóveda principal.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"matemáticas\\\">Mat.</span> Incógnita de un cálculo, o primera de las incógnitas, si son más de una. U. <span class=\\\"abbr\\\" data-title=\\\"terminación\\\">t.</span> en <span class=\\\"abbr\\\" data-title=\\\"sentido\\\">sent.</span> fig.\",\"7\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"medicina\\\">Med.</span> Enfermedad aguda, producida por el retorcimiento de las asas intestinales, que origina oclusión intestinal y cólico miserere.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"derecho\\\">Der.</span> Derecho no transmisible a percibir de los frutos de la cosa ajena los que basten a las necesidades del usuario y de su familia.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Decimoctava letra del abecedario español, que representa el fonema consonántico oclusivo velar sordo.\",\"8\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"alquimia\\\">Alq.</span> oro (‖ elemento químico).  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Letra p y sonido que representa.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"cinematografía\\\">Cinem.</span> y <span class=\\\"abbr\\\" data-title=\\\"televisión\\\">TV.</span> Aparato provisto de un brazo móvil con una plataforma, sobre la cual hay instalada una cámara capaz de realizar toda clase de desplazamientos.\",\"9\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"medicina\\\">Med.</span> Debilidad causada por la excesiva secreción de orina.  //  <span class=\\\"abbr\\\" data-title=\\\"preposición\\\">prep.</span> Tan pronto como, después que.\",\"10\":\"<span class=\\\"abbr\\\" data-title=\\\"transitivo verbo&nbsp;transitivo\\\">tr.</span> <span class=\\\"abbr\\\" data-title=\\\"medicina\\\">Med.</span> Cortar oblicuamente alguna parte del cuerpo.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"fonética fonología\\\">Fon.</span> En las descripciones diacrónicas, variante del fonema /i/ cuando forma parte de un diptongo, bien como semiconsonante, como en miedo, bien como semivocal, como en aire.\",\"11\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"filosofía\\\">Fil.</span> En la lógica escolástica, letra que representa la proposición particular negativa.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"matemáticas\\\">Mat.</span> n (‖ número indeterminado). U. <span class=\\\"abbr\\\" data-title=\\\"terminación\\\">t.</span> <span class=\\\"abbr\\\" data-title=\\\"como\\\">c.</span> adj.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"psicología\\\">Psicol.</span> En el psicoanálisis de Freud, instancia psíquica que se reconoce como yo, parcialmente consciente, que controla la motilidad y media entre los instintos del ello, los ideales del superego y la realidad del mundo exterior.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"filosofía\\\">Fil.</span> En la lógica escolástica, letra que representa la proposición particular negativa.\"},\"ver\":{\"1\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Inflamación de las venas.  //  <span class=\\\"abbr\\\" data-title=\\\"adverbio adverbial\\\">adv.</span> <span class=\\\"abbr\\\" data-title=\\\"relativo\\\">relat.</span> <span class=\\\"abbr\\\" data-title=\\\"desusado\\\">desus.</span> donde. U. en <span class=\\\"abbr\\\" data-title=\\\"lenguaje\\\">leng.</span> poét.\",\"2\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"marina\\\">Mar.</span> Bajo de piedra, a manera de meseta llana.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Mazorca tierna de maíz, que se consume, cocida o asada, como alimento en México y otros países de América Central.\",\"3\":\"<span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> 3 persona singular presente del verbo operar.  //  <span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> 3 persona singular presente del verbo elidir.\",\"4\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Cazo pequeño.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Cuba\\\">Cuba.</span> Música popular bailable.\",\"5\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"Argentina\\\">Arg.</span> y <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span> cacuy.  //  <span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> 3 persona singular presente del verbo pulir.\",\"6\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> Flor o fruto del loto (‖ planta acuática).  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Cónyuge femenino del hijo o de la hija de una persona.\",\"7\":\"<span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> 2 persona singular presente de subjuntivo del verbo atondar.  //  <span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> 1 persona singular futuro del verbo ir.\",\"8\":\"<span class=\\\"abbr\\\" data-title=\\\"adjetivo\\\">adj.</span> Dicho de una persona: De uno de los pueblos indígenas que habitan en el estado mexicano de Nayarit. U. <span class=\\\"abbr\\\" data-title=\\\"terminación\\\">t.</span> <span class=\\\"abbr\\\" data-title=\\\"como\\\">c.</span> <span class=\\\"abbr\\\" data-title=\\\"sustantivo\\\">s.</span> m.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Vestidura talar que usaban encima de la túnica los antiguos romanos, consistente en una pieza larga de tela enrollada alrededor del cuerpo.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Alguno de los sonidos que representa la letra g.\",\"9\":\"<span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> <span class=\\\"abbr\\\" data-title=\\\"Bolivia\\\">Bol.</span> Niña o joven nativa.  //  <span class=\\\"abbr\\\" data-title=\\\"femenino nombre&nbsp;femenino\\\">f.</span> Alguno de los sonidos que representa la letra r.  //  <span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"filosofía\\\">Fil.</span> Sujeto humano en cuanto persona. El yo. Mi yo.\",\"10\":\"<span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> 1 y 3 persona singular preterito imperfecto del verbo oír.  //  <span class=\\\"abbr\\\" data-title=\\\"conjunción\\\">conj.</span> <span class=\\\"abbr\\\" data-title=\\\"disyuntivo\\\">disyunt.</span> U. en lugar de o ante palabras que empiezan por o o por ho.  //  <span class=\\\"abbr\\\" data-title=\\\"interjección interjectivo\\\">interj.</span> U. para avisar de la presencia de algo o de alguien, especialmente si constituyen un peligro.\",\"11\":\"<span class=\\\"abbr\\\" data-title=\\\"masculino nombre&nbsp;masculino\\\">m.</span> <span class=\\\"abbr\\\" data-title=\\\"arquitectura\\\">Arq.</span> Atrio o vestíbulo situado a la entrada de las iglesias paleocristianas y bizantinas.  //  <span class=\\\"abbr\\\" data-title=\\\"verbal\\\">verb.</span> Participio del verbo andar.\"}},\"file\":\"crucigrama_tecnico_1666745040\",\"title\":\"Crucigrama Técnico\"}";
+    active_links = function () {
+      document.getElementById("go-up").addEventListener("click", function (e) {
+        cross = document.getElementById("crossword-board")
+        window.scrollTo({ top: window.scrollY + (cross.getBoundingClientRect().y - 50), behavoir: 'smooth' })
+      })
+
+      for (elem of document.getElementsByClassName("num_link")) {
+        elem.addEventListener("click", function (e) {
+          id = e.currentTarget.getAttribute("id")
+          def = document.getElementById(id.replace("num", "def"))
+          window.scrollTo({ top: window.scrollY + def.getBoundingClientRect().y, behavior: 'smooth' })
+        })
+      }
+
+      for (elem of document.getElementsByClassName("cell-input")) {
+        elem.addEventListener("click", function (e) {
+          e.currentTarget.select()
+        })
+        elem.addEventListener("blur", function (e) {
+          arr_id = e.currentTarget.getAttribute("id").split("-");
+          value = e.currentTarget.value;
+          if (add_value_to_crossword(arr_id[1], arr_id[2], value) && is_full_board()) {
+            if (check_end()) {
+              delete_cookie_board(data.file);
+              set_resp("Has completado el crucigrama");
+            } else {
+              set_resp("Hay palabras incorrectas");
+            }
+          }
+        })
+      }
+
+      document.getElementById("btn-correct").addEventListener("click", function (e) {
+        for (i = 0; i < board.length; i++) {
+          for (j = 0; j < board[i].length; j++) {
+            cell = board[i][j];
+            if (cell != "" && !/\*/.test(cell) && cell != crossword[i][j]) {
+              board[i][j] = "*" + cell;
+            }
+          }
+        }
+        load_board(board);
+        active_links();
+
+        set_resp("Hay tienes una ayuda");
+      })
+    }
+
+    add_value_to_crossword = function (id_line, id_col, value) {
+
+      input = document.getElementById("c-" + id_line + '-' + id_col);
+      prev_val = document.getElementById("c-" + id_line + '-' + id_col).getAttribute("value");
+
+      if (/[a-zñ]/i.test(value) && prev_val != value) {
+        board[id_line][id_col] = value.toUpperCase();
+        set_cookie_board(data.file, board);
+        input.value = value.toUpperCase();
+        input.classList.remove("corrected");
+        set_resp("Has colocado una letra");
+        return true;
+      } else {
+        if (value == "") {
+          input.classList.remove("corrected");
+        }
+        set_resp();
+        input.innerHTML = "";
+        return false
+      }
+    }
+
+    check_end = function () {
+      end = true;
+      for (i = 0; i < board.length; i++) {
+        for (j = 0; j < board[i].length; j++) {
+          if (board[i][j] != crossword[i][j]) { end = false; }
+        }
+      }
+      return end;
+    }
+
+    delete_cookie_board = function(name) {
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;Samesite=none;Secure=true;";
+    }
+
+    get_blank_crossword = function () {
+      blank = []
+      for (x = 0; x < 11; x++) {
+        aux = [];
+        for (y = 0; y < 11; y++) { aux.push(""); }
+        blank.push(aux);
+      }
+      return blank;
+    }
+
+    load_board = function (board) {
+      if (typeof board == "undefined") {
+        board = get_blank_crossword()
+      }
+
+      html = ['<div class="board">']
+
+      html.push('<div class="line">')
+      for (num = 0; num <= board.length; num++) {
+        if (num == 0) {
+          html.push('<div class="cell blank"></div>');
+        } else {
+          html.push('<div id="num-ver-' + num + '" class="cell numv num_link" phx-hook="CrosswordNumToDef"><span>' + num + '</span></div>')
+        }
+      }
+      html.push("</div>")
+
+      for (i = 0; i < board.length; i++) {
+        html.push('<div class="line">')
+        html.push('<div  id="num-hor-' + (i + 1) + '" class="cell numh num_link" phx-hook="CrosswordNumToDef"><span>' + (i + 1) + '</span></div>')
+        for (j = 0; j < board[i].length; j++) {
+          var id_i = "c-" + i + "-" + j
+          cell = board[i][j]
+          html.push('<div class="cell" id="cell-' + i + '-' + j + '">')
+          if (/\-/.test(cell)) {
+            html.push('<input id="' + id_i + '" class="cell-input" maxlength="1" phx-blur="crossword-blur" value="">')
+          } else if (/\*/.test(cell)) {
+            html.push('<input id="' + id_i + '" class="cell-input corrected" maxlength="1" phx-blur="crossword-blur" value="' + cell.replace("*", "") + '">')
+          } else if (cell === "0") {
+            html.push('<span class="block">' + cell + '</span>')
+          } else {
+            html.push('<input id="' + id_i + '" class="cell-input" maxlength="1" phx-blur="crossword-blur" value="' + cell + '">')
+          }
+          html.push("</div>")
+        }
+        html.push("</div>")
+      }
+      html.push('</div>')
+
+      document.getElementById("crossword-board").innerHTML = html.join("")
+    }
+
+    load_defs = function (definitions) {
+      html = ['<div class="definitions">']
+      for (ori in definitions) {
+        html.push('<div class="orientacion">')
+        html.push('<h3>' + (ori == "hor" ? "Horizontal" : "Vertical") + '</h3>')
+        html.push('<p>')
+        for (num in definitions[ori]) {
+          html.push('<span id="def-' + ori + '-' + num + '">' + num + '. - </span><span>' + definitions[ori][num] + '</span><br>')
+          // html.push('<span id="def-' + ori + '-' + num + '">' + num + '. - </span><span>' + definitions[ori][num].join(" // ") + '</span><br>')
+        }
+        html.push('</p></div>')
+      }
+      html.push('</div>')
+      document.getElementById("crossword-defs").innerHTML = html.join("")
+    }
+
+    init_crossword = function () {
+      data = JSON.parse(data);
+      crossword = data.crossword.map(line => {
+        return line.map(let => { return let.toUpperCase(); });
+      });
+
+      prev = get_cookie_board(data.file);
+      board = false;
+      if(prev){
+        if (confirm("Se ha detectado una partida previa. Deseas continuarla?")){
+          board = prev;
+        } else {
+          delete_cookie_board(data.file);
+        }
+      }
+      if(!board){
+        board = crossword.map(line => {
+          return line.map(let => { return let == 0 ? let : ""; });
+        });
+      }
+
+      load_board(board);
+      load_defs(data.definitions);
+
+      document.getElementById("crossword-title").innerHTML = data.title;
+      active_links();
+      set_resp("Crucigrama preparado");
+    }
+
+    is_full_board = function () {
+      for(line of board){
+        for(letra of line){
+          if (letra == "" || letra == "-1") { return false; }
+        }
+      }
+      return true;
+    }
+
+    get_cookie_board = function(name) {
+      let cookies = document.cookie;
+      for (cookie of document.cookie.split("; ")){
+        a_cookie = cookie.split("=");
+        if (a_cookie[0] == name && a_cookie[1] != ""){ 
+          return JSON.parse(a_cookie[1]);
+        }
+      }
+      return false;
+    }
+
+    set_cookie_board = function (cname, board, exdays = 1) {
+      board_str = JSON.stringify(board);
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+      document.cookie = cname + "=" + board_str + ";expires=" + d.toUTCString() + ";path=/;Samesite=none;Secure=true;";
+    }
+
+    set_resp = function (resp) {
+      text = "";
+      if (typeof resp != "undefined" && resp != "") {
+        text = "<h3>" + resp + "</h3>";
+      }
+      document.getElementById("crossword-resp").innerHTML = text;
+    }
+
+    window.onload = function () {
+      init_crossword();
+
+    }
+
+  </script>
+</head>
+
+<body>
+  <ul class="hack_nav">
+    <li><a href="../">Home</a></li>
+    <li><a href="../sudoku">Sudoku</a></li>
+    <li><a href="../paper">Piedra-Papel-Tijera</a></li>
+    <li><a href="../crosswords">Crucigramas</a></li>
+  </ul>
+
+  <div id="crossword-view">
+    <h2 id="crossword-title">Crossword</h2>
+    <div id="crossword-resp"></div>
+    <div id="crossword-board" class="crossword-board"></div>
+    <div class="crossword_controles">
+      <button id="btn-correct">Correct crossword</button>
+    </div>
+    <div id="crossword-defs" class="crossword-defs"></div>
+    <div id="go-up" class="go-up" phx-hook="CrosswordGoUp">Go up</div>
+  </div>
+</body>
+
+</html>

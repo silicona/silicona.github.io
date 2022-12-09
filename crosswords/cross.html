@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <style>
+    *,
+    ::after,
+    ::before {
+      box-sizing: inherit;
+    }
+
+    body {
+      color: #000000;
+      font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+      font-size: 16px;
+      /* font-size: 1.6em; */
+      font-weight: 300;
+      letter-spacing: .01em;
+      line-height: 1.6;
+      margin: 0;
+      padding: 1em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 300;
+      letter-spacing: -.1rem;
+      margin-bottom: 1.0rem;
+      margin-top: 0;
+    }
+
+    /* h3 {
+      font-size: 2.2rem;
+      letter-spacing: -.08rem;
+      line-height: 1.35;
+    } */
+
+
+    #crossword-view {
+      font-size: 1.2em;
+    }
+
+    #crossword-resp {
+      min-height: 50px;
+    }
+
+    #crossword-resp * {
+      margin: 0;
+      text-align: center;
+    }
+
+    .crossword-board {
+      margin: 0 auto;
+      text-align: center;
+      float: left;
+      margin: 0 1em;
+      min-width: 550px;
+    }
+
+    .crossword-board .board {
+      display: inline-block;
+      /* border: 1px solid black; */
+      border-radius: 4px;
+    }
+
+    .crossword-board .line::before,
+    .crossword-board .line::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+
+    .crossword-board .cell {
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      float: left;
+      border: 1px solid black;
+    }
+
+    .crossword-board .line:nth-of-type(2) .cell {
+      border-top-width: 2px;
+    }
+
+    .crossword-board .line:last-of-type .cell {
+      border-bottom-width: 2px;
+    }
+
+    .crossword-board .cell:nth-of-type(2) {
+      border-left-width: 2px;
+    }
+
+    .crossword-board .cell:nth-of-type(2).numv {
+      border-left-width: 2px;
+    }
+
+    .crossword-board .cell:last-of-type {
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      float: left;
+      border: 1px solid black;
+      border-right-width: 2px;
+    }
+
+    .crossword-board .cell.blank {
+      margin-right: 2px;
+      border: 2px solid transparent;
+    }
+
+    .crossword-board .cell.numh {
+      margin-right: 2px;
+      border-width: 1px 2px;
+      line-height: 1.8em;
+      cursor: pointer;
+    }
+
+    .crossword-board .cell.numv {
+      margin-bottom: 2px;
+      border-width: 2px 1px;
+      line-height: 1.8em;
+      cursor: pointer;
+    }
+
+    .crossword-board .numv:last-of-type {
+      border-right-width: 2px;
+    }
+
+    .crossword-board .cell .block {
+      display: block;
+      background-color: black;
+      height: 100%;
+    }
+
+    .crossword-board .cell .cell-input {
+      -webkit-appearance: none;
+      background-color: white;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      box-sizing: inherit;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      font-size: inherit;
+      text-align: center;
+    }
+
+    .crossword-board .cell .cell-input.corrected {
+      background-color: pink;
+    }
+
+    .crossword-defs .definitions h3,
+    .crossword-defs .definitions p {
+      text-align: left;
+      margin: 0 0 1ex 0;
+    }
+
+    .crossword-defs .definitions .abbr {
+      color: green;
+      position: relative;
+    }
+
+    .crossword-defs .definitions .abbr::before {
+      /* position: relative; */
+      background-color: white;
+      color: #293133;
+      border: 1px solid #293133;
+      border-radius: 7px;
+      position: absolute;
+      top: 1.5em;
+      left: 0px;
+      padding: .3ex 1.5ex;
+      z-index: 10;
+      line-height: 1.2em;
+    }
+
+    .crossword-defs .definitions .abbr:hover::before {
+      content: attr(data-title);
+      display: block;
+      /* top: 20; */
+    }
+
+    .crossword_controles h4 {
+      display: inline-block;
+      margin: 0 0 1ex 0;
+    }
+
+    .crossword_controles button {
+      font-size: 1.2rem;
+      border: 1px solid goldenrod;
+      border-radius: 7px;
+      background-color: gold;
+      border-color: black;
+      color: black;
+    }
+
+
+    #go-up {
+      color: black;
+      display: block;
+      padding: .8em;
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      border-color: black;
+      text-decoration: none;
+      transition: all .3s ease-out;
+      background-color: papayawhip;
+      border-radius: 50%;
+    }
+
+    #go-up:before {
+      content: '▲';
+      font-size: .9em;
+      margin-left: -.7em;
+      border: solid .13em black;
+      border-radius: 10em;
+      width: 1.4em;
+      height: 1.4em;
+      line-height: 1.2em;
+      border-color: inherit;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    #go-up:hover {
+      color: pink;
+      border-color: pink;
+      bottom: 60px;
+      transform: scale(.9)
+    }
+  </style>
+  <link rel="stylesheet" href="../assets/index.css">
+
+  <script>
+    data = "{\"crossword\":[[\"d\",\"i\",\"s\",\"i\",\"n\",\"f\",\"o\",\"r\",\"m\",\"a\",\"t\",\"i\",\"o\",\"n\"],[\"r\",\"e\",\"c\",\"l\",\"a\",\"i\",\"m\",\"e\",\"d\",\"0\",\"l\",\"a\",\"n\",\"d\"],[\"m\",\"a\",\"c\",\"k\",\"e\",\"r\",\"e\",\"l\",\"0\",\"m\",\"a\",\"m\",\"b\",\"a\"],[\"0\",\"0\",\"0\",\"0\",\"0\",\"s\",\"n\",\"a\",\"k\",\"e\",\"0\",\"b\",\"o\",\"0\"],[\"t\",\"h\",\"i\",\"r\",\"s\",\"t\",\"0\",\"t\",\"r\",\"a\",\"p\",\"0\",\"a\",\"c\"],[\"f\",\"r\",\"u\",\"i\",\"t\",\"0\",\"l\",\"e\",\"a\",\"t\",\"h\",\"e\",\"r\",\"0\"],[\"w\",\"m\",\"d\",\"s\",\"0\",\"r\",\"e\",\"d\",\"u\",\"b\",\"0\",\"d\",\"d\",\"p\"],[\"0\",\"0\",\"0\",\"e\",\"n\",\"t\",\"s\",\"0\",\"t\",\"a\",\"r\",\"d\",\"i\",\"s\"],[\"s\",\"e\",\"a\",\"0\",\"b\",\"a\",\"s\",\"s\",\"0\",\"l\",\"a\",\"i\",\"n\",\"0\"],[\"i\",\"d\",\"l\",\"e\",\"d\",\"0\",\"o\",\"r\",\"a\",\"l\",\"0\",\"e\",\"g\",\"o\"],[\"p\",\"a\",\"l\",\"m\",\"0\",\"t\",\"r\",\"e\",\"e\",\"0\",\"h\",\"d\",\"0\",\"z\"],[\"p\",\"0\",\"o\",\"0\",\"q\",\"0\",\"0\",\"0\",\"s\",\"e\",\"t\",\"0\",\"t\",\"o\"],[\"e\",\"n\",\"t\",\"i\",\"c\",\"i\",\"n\",\"g\",\"0\",\"a\",\"s\",\"p\",\"e\",\"n\"],[\"d\",\"a\",\"0\",\"c\",\"0\",\"o\",\"f\",\"0\",\"e\",\"0\",\"0\",\"h\",\"u\",\"e\"]],\"definitions\":{\"hor\":{\"1\":\"noun. False information spread in order to deceive people.\",\"2\":\"noun, Environment. Land that was under the sea or was in a very poor condition, but has been improved so that it can be used for farming or building on.\",\"3\":\"noun. A sea fish with a strong taste, often used as food. // noun. A very poisonous snake that lives mainly in caves or trees in parts of africa.\",\"4\":\"verb. To move along a route that includes a lot of twists or bends. // noun, abbreviation. Body odour UK.\",\"5\":\"noun. A statement by or photograph of someone on social media that is intended to attract attention or make people who see it sexually interested in them. // noun, abbreviation, US. Air conditioner or air conditioning.\",\"6\":\"noun. A sweet food made from fruit that has been crushed and then spread out, dried, and cut into strips.\",\"7\":\"noun, abbreviation. Weapons of mass destruction. // verb. To change the sounds and speech on a film or television programme for a second, third, etc. time, especially to a different language. // adjective, Commerce, abbreviation. Delivered duty paid.\",\"8\":\"noun, UK, informal. Entertainments. // noun, UK. Something that is much larger inside than it appears to be from the outside.\",\"9\":\"noun, US. A sea fish that you can eat. // verb. past participle of Lie.\",\"10\":\"verb. past simple and past participle of Idle. // adjective, B2. Spoken and not written. // noun, Psychology, specialized. In psychoanalysis, the part of a person's mind that tries to match the hidden desires (= wishes) of the id (= part of the unconscious mind) with the demands of the real world.\",\"11\":\"noun. A tree growing in warm regions and having a tall, straight trunk, no branches, and a mass of long, pointed leaves at the top. // adjective, abbreviation. High-definition. // noun. The 26th and last letter of the english alphabet.\",\"12\":\"verb, Australian English, informal. To leave quickly(2 words). // noun, UK, informal. A short argument or fight.\",\"13\":\"adjective. Something that is enticing attracts you to it by offering you advantages or pleasure. // noun. A tree of the poplar family, with leaves that shake even when there is only a little wind.\",\"14\":\"noun, Commerce, abbreviation. Documents against acceptance. // adjective, abbreviation. The church of england(2 words). // noun. (a degree of lightness, darkness, strength, etc. of) a colour.\"},\"ver\":{\"1\":\"noun, Internet & telecoms, abbreviation. Digital rights management. // abbreviation. 'that feeling when', 'that feel when', or 'that face when'. // verb. past simple and past participle of Sip.\",\"2\":\"noun, Environment, abbreviation. International energy agency. // noun, Hr, abbreviation. Human resource management. // noun, It, abbreviation. Electronic design automation. // abbreviation. Not applicable.\",\"3\":\"noun, Medical, specialized. Squamous cell carcinoma. // noun, abbreviation. Intra-uterine device. // verb. To give something, especially a share of something available, for a particular purpose.\",\"4\":\"noun, disapproving. A particular type. // verb. (of a group of people) to begin to oppose or fight a bad government or ruler. // informal. Them. // adverb, abbreviation. In charge.\",\"5\":\"adverb, Scottish English, Northern English. No or not. // noun, abbreviation. Saint. // abbreviation. No big deal. // noun, abbreviation. Queen's counsel.\",\"6\":\"noun, UK. The best possible undergraduate university degree you can get in the uk and some other countries. // noun, UK, abbreviation. Road traffic accident. // noun. The 20th letter of the english alphabet. // adjective, It. Input/output.\",\"7\":\"noun. Something that is considered to be a sign of how a future event will take place. // noun, Law, specialized. A person who allows someone to use something that they own, such as land, a building, or a piece of equipment, according to a lease (= legal agreement). // noun, abbreviation. The national front.\",\"8\":\"adjective, B2. If people are related, they belong to the same family. // noun, UK, abbreviation. Sex and relationships education. // noun. The seventh letter of the english alphabet.\",\"9\":\"noun, abbreviation, UK. Managing director UK. // noun, old-fashioned. An extremely offensive word for a person from germany. // noun, It, abbreviation. Advanced encryption standard. // noun. A note in western music.\",\"10\":\"determiner, A1. Used before a noun to refer to a single thing or person that has not been mentioned before, especially when you are not referring to a particular thing or person. // noun. One of several small balls of meat that are eaten hot, often with a sauce. // noun, Medical, specialized. Episodic ataxia.\",\"11\":\"abbreviation. Three-letter abbreviation. // noun. A number that shows how strongly acid or alkaline a substance is, in a range from 0 to 14. // adjective, Anatomy, specialized. Radial artery. // noun, Commerce, abbreviation. Harmonized tariff schedule.\",\"12\":\"noun, Literature, specialized. A unit of rhythm in poetry, consisting of one short syllable that is not stressed followed by one long one that is stressed, for example in the word 'describe'. // verb. past simple and past participle of Eddy. // noun. A number that shows how strongly acid or alkaline a substance is, in a range from 0 to 14.\",\"13\":\"noun, Business, specialized. The process in which new employees gain the knowledge and skills they need to become effective members of an organization. // noun, Measures, abbreviation. Twenty-foot equivalent unit.\",\"14\":\"noun, abbreviation. Non-disclosure agreement. // noun. A mark in an exam or for a piece of work that shows that your work is average. // noun. Used when you want to add extra information at the end of a letter or email. // noun, C1, informal, UK. Air that is clean and pleasant to breathe, especially near the sea.\"}},\"file\":\"crossword_1670593877\",\"title\":\"Crossword\"}";
+    active_links = function () {
+      document.getElementById("go-up").addEventListener("click", function (e) {
+        cross = document.getElementById("crossword-board")
+        window.scrollTo({ top: window.scrollY + (cross.getBoundingClientRect().y - 50), behavoir: 'smooth' })
+      })
+
+      for (elem of document.getElementsByClassName("num_link")) {
+        elem.addEventListener("click", function (e) {
+          id = e.currentTarget.getAttribute("id")
+          def = document.getElementById(id.replace("num", "def"))
+          window.scrollTo({ top: window.scrollY + def.getBoundingClientRect().y, behavior: 'smooth' })
+        })
+      }
+
+      for (elem of document.getElementsByClassName("cell-input")) {
+        elem.addEventListener("click", function (e) {
+          e.currentTarget.select()
+        })
+        elem.addEventListener("blur", function (e) {
+          arr_id = e.currentTarget.getAttribute("id").split("-");
+          value = e.currentTarget.value;
+          if (add_value_to_crossword(arr_id[1], arr_id[2], value) && is_full_board()) {
+            if (check_end()) {
+              delete_cookie_board(data.file);
+              set_resp("Has completado el crucigrama");
+            } else {
+              set_resp("Hay palabras incorrectas");
+            }
+          }
+        })
+      }
+
+      document.getElementById("btn-correct").addEventListener("click", function (e) {
+        for (i = 0; i < board.length; i++) {
+          for (j = 0; j < board[i].length; j++) {
+            cell = board[i][j];
+            if (cell != "" && !/\*/.test(cell) && cell != crossword[i][j]) {
+              board[i][j] = "*" + cell;
+            }
+          }
+        }
+        load_board(board);
+        active_links();
+
+        set_resp("Hay tienes una ayuda");
+      })
+    }
+
+    add_value_to_crossword = function (id_line, id_col, value) {
+
+      input = document.getElementById("c-" + id_line + '-' + id_col);
+      prev_val = document.getElementById("c-" + id_line + '-' + id_col).getAttribute("value");
+
+      if (/[a-zñ]/i.test(value) && prev_val != value) {
+        board[id_line][id_col] = value.toUpperCase();
+        set_cookie_board(data.file, board);
+        input.value = value.toUpperCase();
+        input.classList.remove("corrected");
+        set_resp("Has colocado una letra");
+        return true;
+      } else {
+        if (value == "") {
+          input.classList.remove("corrected");
+        }
+        set_resp();
+        input.innerHTML = "";
+        return false
+      }
+    }
+
+    check_end = function () {
+      end = true;
+      for (i = 0; i < board.length; i++) {
+        for (j = 0; j < board[i].length; j++) {
+          if (board[i][j] != crossword[i][j]) { end = false; }
+        }
+      }
+      return end;
+    }
+
+    delete_cookie_board = function(name) {
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;Samesite=none;Secure=true;";
+    }
+
+    get_blank_crossword = function () {
+      blank = []
+      for (x = 0; x < 11; x++) {
+        aux = [];
+        for (y = 0; y < 11; y++) { aux.push(""); }
+        blank.push(aux);
+      }
+      return blank;
+    }
+
+    load_board = function (board) {
+      if (typeof board == "undefined") {
+        board = get_blank_crossword()
+      }
+
+      html = ['<div class="board">']
+
+      html.push('<div class="line">')
+      for (num = 0; num <= board.length; num++) {
+        if (num == 0) {
+          html.push('<div class="cell blank"></div>');
+        } else {
+          html.push('<div id="num-ver-' + num + '" class="cell numv num_link" phx-hook="CrosswordNumToDef"><span>' + num + '</span></div>')
+        }
+      }
+      html.push("</div>")
+
+      for (i = 0; i < board.length; i++) {
+        html.push('<div class="line">')
+        html.push('<div  id="num-hor-' + (i + 1) + '" class="cell numh num_link" phx-hook="CrosswordNumToDef"><span>' + (i + 1) + '</span></div>')
+        for (j = 0; j < board[i].length; j++) {
+          var id_i = "c-" + i + "-" + j
+          cell = board[i][j]
+          html.push('<div class="cell" id="cell-' + i + '-' + j + '">')
+          if (/\-/.test(cell)) {
+            html.push('<input id="' + id_i + '" class="cell-input" maxlength="1" phx-blur="crossword-blur" value="">')
+          } else if (/\*/.test(cell)) {
+            html.push('<input id="' + id_i + '" class="cell-input corrected" maxlength="1" phx-blur="crossword-blur" value="' + cell.replace("*", "") + '">')
+          } else if (cell === "0") {
+            html.push('<span class="block">' + cell + '</span>')
+          } else {
+            html.push('<input id="' + id_i + '" class="cell-input" maxlength="1" phx-blur="crossword-blur" value="' + cell + '">')
+          }
+          html.push("</div>")
+        }
+        html.push("</div>")
+      }
+      html.push('</div>')
+
+      document.getElementById("crossword-board").innerHTML = html.join("")
+    }
+
+    load_defs = function (definitions) {
+      html = ['<div class="definitions">']
+      for (ori in definitions) {
+        html.push('<div class="orientacion">')
+        html.push('<h3>' + (ori == "hor" ? "Horizontal" : "Vertical") + '</h3>')
+        html.push('<p>')
+        for (num in definitions[ori]) {
+          html.push('<span id="def-' + ori + '-' + num + '">' + num + '. - </span><span>' + definitions[ori][num] + '</span><br>')
+          // html.push('<span id="def-' + ori + '-' + num + '">' + num + '. - </span><span>' + definitions[ori][num].join(" // ") + '</span><br>')
+        }
+        html.push('</p></div>')
+      }
+      html.push('</div>')
+      document.getElementById("crossword-defs").innerHTML = html.join("")
+    }
+
+    init_crossword = function () {
+      data = JSON.parse(data);
+      crossword = data.crossword.map(line => {
+        return line.map(let => { return let.toUpperCase(); });
+      });
+
+      prev = get_cookie_board(data.file);
+      board = false;
+      if(prev){
+        if (confirm("Se ha detectado una partida previa. Deseas continuarla?")){
+          board = prev;
+        } else {
+          delete_cookie_board(data.file);
+        }
+      }
+      if(!board){
+        board = crossword.map(line => {
+          return line.map(let => { return let == 0 ? let : ""; });
+        });
+      }
+
+      load_board(board);
+      load_defs(data.definitions);
+
+      document.getElementById("crossword-title").innerHTML = data.title;
+      active_links();
+      set_resp("Crucigrama preparado");
+    }
+
+    is_full_board = function () {
+      for(line of board){
+        for(letra of line){
+          if (letra == "" || letra == "-1") { return false; }
+        }
+      }
+      return true;
+    }
+
+    get_cookie_board = function(name) {
+      let cookies = document.cookie;
+      for (cookie of document.cookie.split("; ")){
+        a_cookie = cookie.split("=");
+        if (a_cookie[0] == name && a_cookie[1] != ""){ 
+          return JSON.parse(a_cookie[1]);
+        }
+      }
+      return false;
+    }
+
+    set_cookie_board = function (cname, board, exdays = 1) {
+      board_str = JSON.stringify(board);
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+      document.cookie = cname + "=" + board_str + ";expires=" + d.toUTCString() + ";path=/;Samesite=none;Secure=true;";
+    }
+
+    set_resp = function (resp) {
+      text = "";
+      if (typeof resp != "undefined" && resp != "") {
+        text = "<h3>" + resp + "</h3>";
+      }
+      document.getElementById("crossword-resp").innerHTML = text;
+    }
+
+    window.onload = function () {
+      init_crossword();
+
+    }
+
+  </script>
+</head>
+
+<body>
+  <ul class="hack_nav">
+    <li><a href="../">Home</a></li>
+    <li><a href="../sudoku">Sudoku</a></li>
+    <li><a href="../paper">Piedra-Papel-Tijera</a></li>
+    <li><a href="../crosswords">Crucigramas</a></li>
+  </ul>
+  <div id="crossword-view">
+    <h2 id="crossword-title">Crossword</h2>
+    <div id="crossword-resp"></div>
+    <div id="crossword-board" class="crossword-board"></div>
+    <div class="crossword_controles">
+      <button id="btn-correct">Correct crossword</button>
+    </div>
+    <div id="crossword-defs" class="crossword-defs"></div>
+    <div id="go-up" class="go-up" phx-hook="CrosswordGoUp">Go up</div>
+  </div>
+</body>
+
+</html>
